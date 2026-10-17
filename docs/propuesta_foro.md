@@ -2,6 +2,8 @@
 
 **Asunto:** Propuesta TPI: el mercado laboral IT en Reddit desde la llegada de ChatGPT
 
+Versión con formato para el campus: `propuesta_foro.html` (pegar en Ver > Código fuente).
+
 ## 1. Corpus seleccionado
 
 Publicaciones y comentarios de comunidades de Reddit, entre 2020 y 2026:
@@ -22,10 +24,13 @@ Desde fines de 2022 se habla de una crisis del empleo IT: despidos en empresas t
 
 ## 3. Hipótesis inicial
 
-Desde la llegada de ChatGPT, la conversación sobre trabajo IT en Reddit se volvió más negativa y cambió de tema. Se habla menos de sueldos y de cambiar de trabajo, y más de despidos, de la dificultad para conseguir empleo y de la IA. Además esperamos que:
+Desde la llegada de ChatGPT, la conversación sobre trabajo IT en Reddit se volvió más negativa y cambió de tema: se habla menos de sueldos y de cambiar de trabajo, y más de despidos, de la dificultad para conseguir empleo y de la IA.
 
-- el cambio de tono acompañe la caída de las ofertas laborales de software;
-- palabras como "trabajo", "junior" o "empresa" aparezcan asociadas a términos distintos antes y después de 2022.
+La hipótesis se divide en tres partes, que se pueden confirmar o descartar por separado:
+
+- **A. Tono y temas.** Después del corte la conversación es más negativa y gira hacia despidos, búsqueda de empleo e IA.
+- **B. Mercado.** El sentimiento en Reddit se mueve junto con la cantidad de ofertas de software: cuando caen las ofertas, la conversación se vuelve más negativa.
+- **C. Vocabulario.** Palabras como "trabajo", "junior" o "empresa" aparecen asociadas a términos distintos antes y después de 2022.
 
 ## 4. Estrategia preliminar
 
