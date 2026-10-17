@@ -9,6 +9,7 @@ Por cada fuente se documenta el script, los parámetros, la fecha de descarga y 
 | r/devsarg, posts | conversación de devs argentinos, núcleo del corpus | posteos | parcial: 30.691 de ~42.800 |
 | r/taquerosprogramadores, posts | contraste México, desde 2020 | posteos | pendiente |
 | r/programacion, posts | habla hispana general, historia desde 2010 | posteos | pendiente |
+| r/empleos_AR, posts | trabajo en Argentina en general, control para comparar IT con el resto | posteos | pendiente |
 | r/devsarg, comentarios de posts de trabajo | volumen para el sentimiento, sobre todo antes del corte | posteos | pendiente |
 | Hacker News "Who is hiring?" | avisos reales, mensuales desde 2011 (inglés, global) | ofertas | pendiente |
 | Indeed Hiring Lab | índice diario de avisos de software (US, ES y otros; no hay Argentina) | ofertas (serie numérica) | pendiente |
@@ -25,6 +26,22 @@ Por cada fuente se documenta el script, los parámetros, la fecha de descarga y 
   | chileIT | 14.980 | 232.410 | 2023-05-17 |
   | empleos_AR | 43.395 | 671.949 | 2013-02-25 |
   | cscareerquestions | 566.645 | 7.309.231 | 2011-03-19 |
+
+- **Otros subreddits argentinos relevados:**
+
+  | Subreddit | Posts | Comentarios | Primer post | Nota |
+  |---|---|---|---|---|
+  | argentina | 623.607 | 18.785.812 | 2008-08-29 | general, demasiado grande para bajar entero |
+  | AskArgentina | 176.055 | 4.373.844 | 2015-01-25 | preguntas generales |
+  | RepublicaArgentina | 74.752 | 1.748.473 | 2012-08-26 | general |
+  | ArgentinaBenderStyle | 61.621 | 1.505.878 | 2018-10-19 | general |
+  | Cordoba | 55.245 | 573.965 | 2010-10-03 | regional |
+  | merval | 38.848 | 662.155 | 2014-07-14 | finanzas, dólar |
+  | Rosario | 20.105 | 203.494 | 2011-08-21 | regional |
+  | UBA | 13.353 | 72.109 | 2012-04-08 | estudiantes |
+  | UTN | 2.980 | 17.242 | 2016-03-06 | estudiantes, carreras de sistemas |
+
+  No existen o tienen menos de 50 posts: sysarmy, devsAR, CienciaDeDatos, TrabajoArgentina, ITArgentina, trabajoAR, laburo, freelanceAR. Fuera de r/devsarg no hay otro sub argentino específico de IT con volumen.
 
 - **Descartados:** r/chileIT no tiene datos antes del corte. r/cscareerquestions es demasiado grande para bajarlo entero y la búsqueda por texto de la API no es confiable. En r/empleos_AR, solo ~10% de una muestra de 100 posts eran ofertas ("Solicito empleado/s") y no son específicas de IT.
 - **Comentarios:** `/api/comments/search?link_id=<id>` devuelve todos los comentarios de un post en una request (42 para un post que declaraba 41).
