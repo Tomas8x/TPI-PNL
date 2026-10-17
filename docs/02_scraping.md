@@ -2,17 +2,28 @@
 
 Por cada fuente se documenta el script, los parámetros, la fecha de descarga y lo que se obtuvo. Los archivos crudos quedan en `data/raw/` sin modificar.
 
-## Fuentes planificadas
+## Fuentes elegidas (2026-10-17)
 
-| Fuente | Qué aporta | Corpus | Estado |
-|---|---|---|---|
-| r/devsarg, posts | conversación de devs argentinos, núcleo del corpus | posteos | parcial: 30.691 de ~42.800 |
-| r/taquerosprogramadores, posts | contraste México, desde 2020 | posteos | pendiente |
-| r/programacion, posts | habla hispana general, historia desde 2010 | posteos | pendiente |
-| r/empleos_AR, posts | trabajo en Argentina en general, control para comparar IT con el resto | posteos | pendiente |
-| r/devsarg, comentarios de posts de trabajo | volumen para el sentimiento, sobre todo antes del corte | posteos | pendiente |
-| Hacker News "Who is hiring?" | avisos reales, mensuales desde 2011 (inglés, global) | ofertas | pendiente |
-| Indeed Hiring Lab | índice diario de avisos de software (US, ES y otros; no hay Argentina) | ofertas (serie numérica) | pendiente |
+Criterio: cada fuente tiene que responder a una hipótesis o a una de las tres comparaciones del diseño (antes y después, IT contra el resto, Argentina contra otro país), al menor costo de descarga.
+
+| Fuente | Rol | Hip. | Costo estimado | Estado |
+|---|---|---|---|---|
+| r/devsarg, posts | núcleo: antes y después | A, C | ~15 min (faltan ~12k) | parcial: 30.691 de ~42.800 |
+| r/devsarg, comentarios | volumen para tono y vocabulario, sobre todo antes del corte | A, C | ~7 h (887k) | pendiente |
+| r/empleos_AR, posts | control: mercado laboral argentino general | A | ~55 min (43k) | pendiente |
+| r/taquerosprogramadores, posts | control: otro país, misma antigüedad que r/devsarg | A | ~20 min (16k) | pendiente |
+| Hacker News "Who is hiring?" | texto de avisos: cuántos piden junior o mencionan IA | B | 13 min (184 hilos) | completa: 93.392 avisos |
+| OEDE / SIPA, empleo trimestral por rama | empleo registrado en informática en Argentina | B | 1 archivo (3,4 MB) | completa |
+| Indeed Hiring Lab, avisos por sector (US) | demanda global de software, diaria | B | 1 archivo (12 MB) | completa |
+| Línea de tiempo de eventos | fechas de ChatGPT, GPT-4, despidos tech, devaluación, etc., para ubicar dónde cambian las curvas | A, B | armado a mano con fuentes | pendiente |
+
+Descartadas en esta etapa, con motivo:
+
+- **r/programacion:** mezcla España y Latinoamérica y casi no habla de trabajo, así que no sirve como control de país. r/taquerosprogramadores cumple ese rol con un solo país.
+- **Djinni:** es el único corpus de avisos con texto y seniority antes y después del corte. Pero es de Ucrania, la invasión de 2022-02 se superpone con el efecto ChatGPT y termina en 2023-09. Explicar eso consume tiempo de una exposición de 7 minutos. Queda como opción si Hacker News no alcanza.
+- **Online Labour Index:** se superpone con Indeed y termina en 2024-09.
+- **CEP XXI:** tiene el corte de jóvenes, pero termina en 2023-11. SIPA cubre Argentina hasta 2026.
+- **Comentarios de r/empleos_AR y r/taquerosprogramadores:** para los controles alcanzan los posts. Se suman solo si hace falta más volumen.
 
 ## Pruebas previas (2026-10-17)
 
@@ -51,14 +62,40 @@ Por cada fuente se documenta el script, los parámetros, la fecha de descarga y 
 
 ## Descargas
 
-<!-- Una sección por fuente: script, comando, fecha, parámetros, registros obtenidos, errores, tamaño. -->
+Scripts:
+
+- `scripts/arctic_shift.py`: cliente de Arctic Shift. Pagina por `created_utc` ascendente de a 100 registros, con 2 s de pausa. Reintenta solo ante 429 y ante el timeout intermitente del servidor, y aborta ante cualquier otro error. Reanuda desde el último registro guardado. Considera terminada la descarga cuando llega al registro más reciente que informa la API al arrancar.
+- `scripts/descargar_reddit.py <subs...> [--comentarios]`: posts completos o comentarios con campos seleccionados. Registra cada corrida en `data/raw/reddit/descargas.jsonl`.
+- `scripts/descargar_hn.py`: hilos "Who is hiring?" de Hacker News.
+- `scripts/descargar_series.py`: series de SIPA e Indeed, con hash SHA-256 de cada archivo.
+
+Prueba de los scripts de Reddit con r/devsAR (18 posts, 28 comentarios): descarga completa, segunda corrida sin duplicados. En esa prueba apareció un error en el criterio de fin, que exigía que el último registro tuviera menos de 72 h y fallaba en subs inactivos. Se reemplazó por la comparación con el registro más reciente.
 
 ### r/devsarg, posts
 
 - Script: `scripts/viabilidad_reddit.py --sub devsarg`
 - Primera tanda (2026-10-16): 23.267 posts, hasta el 2025-01-03. Cortada a mano para validar.
 - Segunda tanda (2026-10-16): continuó hasta 30.691 posts (agosto de 2025). Cortada a mano para definir el corpus.
-- Pendiente: completar hasta hoy.
+- Pendiente: completar hasta hoy con `descargar_reddit.py`.
+
+### Hacker News "Who is hiring?"
+
+- Script: `scripts/descargar_hn.py`, 2026-10-17, 13 minutos.
+- 184 hilos, de abril de 2011 a octubre de 2026. Se buscó el título "Ask HN: Who is hiring?" sin distinguir mayúsculas. Faltan abril y mayo de 2015, que la cuenta `whoishiring` no publicó; quedan fuera del período de análisis.
+- 93.392 avisos (comentarios de primer nivel), 0 ids duplicados, 85 vacíos o borrados. Archivo de 128 MB. El texto viene en HTML.
+- Avisos por año:
+
+  | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 (10 hilos) |
+  |---|---|---|---|---|---|---|---|
+  | 8.439 | 7.125 | 10.285 | 7.584 | 4.171 | 3.923 | 4.037 | 2.952 |
+
+- No se bajaron los hilos "Who wants to be hired?" (147, gente que busca trabajo). Quedan como opción.
+
+### Series numéricas
+
+- Script: `scripts/descargar_series.py`, 2026-10-17.
+- `sipa_empleo_trimestral_por_rama.xlsx` (3,4 MB, sha256 `488d891136a116c1...`): de 1996-T1 a 2026, trimestral. La rama 72 es "Actividades de informática" (cuadro C4) y la 722, "Servicios de consultores en informática y suministros de programas" (cuadro C6).
+- `indeed_job_postings_by_sector_US.csv` (12 MB, sha256 `11501409680563c0...`): "Software Development" en EE.UU., diario, del 2020-02-01 al 2026-10-09, con índice base 100 al 2020-02-01. El último valor es 81,55 (`new postings`). Hay variables `total postings` y `new postings`.
 
 ## Relevamiento de fuentes de ofertas (2026-10-17)
 

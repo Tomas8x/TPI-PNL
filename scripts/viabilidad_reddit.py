@@ -2,30 +2,24 @@
 
 Uso: python scripts/viabilidad_reddit.py [--sub NOMBRE] [--sin-descarga]
 
-Descarga todos los posts del sub a <sub>_posts.jsonl (reanuda si el archivo
-ya existe) y reporta volumen por trimestre, subconjunto junior, causas y
+Descarga todos los posts del sub a data/raw/reddit/<sub>_posts.jsonl (reanuda
+si el archivo ya existe) y reporta volumen por trimestre, subconjunto junior, causas y
 comentarios promedio. No hace preprocesamiento ni NLP.
 """
 
-import json
 import os
 import re
 import sys
-import time
 import unicodedata
-from datetime import datetime, timezone
 
 import pandas as pd
-import requests
 
-BASE = "https://arctic-shift.photon-reddit.com/api"
+from arctic_shift import ApiError, api_get, download, fmt
+
 SUBREDDIT = sys.argv[sys.argv.index("--sub") + 1] if "--sub" in sys.argv else "devsarg"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_JSONL = os.path.join(ROOT, "data", "raw", "reddit", f"{SUBREDDIT}_posts.jsonl")
 OUT_PNG = os.path.join(ROOT, "reports", "figures", f"{SUBREDDIT}_junior_por_trimestre.png")
-SLEEP_S = 2.0
-TIMEOUT_BACKOFF_S = (30, 60)  # esperas ante "Timeout. Maybe slow down a bit"
-TIMEOUT_S = 60
 CUTOFF = pd.Timestamp("2022-11-30", tz="UTC")
 
 JUNIOR = ["junior", "trainee", "primer trabajo", "primer laburo", "sin experiencia"]
@@ -37,103 +31,12 @@ CAUSES = {
 }
 
 
-class ApiError(RuntimeError):
-    pass
-
-
-def api_get(path, params):
-    """GET con reintentos acotados solo para fallas transitorias conocidas.
-
-    429: espera lo que indica x-ratelimit-reset, una vez.
-    422 "Timeout. Maybe slow down a bit": timeout por carga del server, hasta
-    len(TIMEOUT_BACKOFF_S) reintentos. Cualquier otro error aborta.
-    """
-    timeouts = 0
-    for attempt in (1, 2, 3, 4):
-        try:
-            r = requests.get(f"{BASE}{path}", params=params, timeout=TIMEOUT_S)
-        except requests.RequestException as e:
-            raise ApiError(f"Error de red en {path} {params}: {e}") from e
-        if r.status_code == 429 and attempt == 1:
-            wait = int(r.headers.get("x-ratelimit-reset", "60")) + 1
-            print(f"  429 rate limit, espero {wait}s (x-ratelimit-reset) y reintento una vez")
-            time.sleep(wait)
-            continue
-        if "Maybe slow down" in r.text and timeouts < len(TIMEOUT_BACKOFF_S):
-            wait = TIMEOUT_BACKOFF_S[timeouts]
-            timeouts += 1
-            print(f"  timeout del servidor ({r.status_code}) en after={params.get('after')}, "
-                  f"espero {wait}s, reintento {timeouts}/{len(TIMEOUT_BACKOFF_S)}")
-            time.sleep(wait)
-            continue
-        if r.status_code != 200:
-            raise ApiError(f"HTTP {r.status_code} en {path} {params}: {r.text[:300]}")
-        body = r.json()
-        if body.get("error"):
-            raise ApiError(f"La API devolvió error en {path} {params}: {body['error']}")
-        if body.get("data") is None:
-            raise ApiError(f"Respuesta sin 'data' en {path} {params}: {str(body)[:300]}")
-        return body["data"]
-    raise ApiError(f"Fallas persistentes (429/timeout) en {path} {params}")
-
-
 def first_post():
     data = api_get("/posts/search", {"subreddit": SUBREDDIT, "sort": "asc", "limit": 1,
                                      "fields": "id,created_utc,title"})
     if not data:
         raise ApiError("sort=asc limit=1 devolvió vacío: el sub no tiene posts o el nombre está mal")
     return data[0]
-
-
-def load_existing():
-    seen, last_ts = set(), None
-    if os.path.exists(OUT_JSONL):
-        with open(OUT_JSONL, encoding="utf-8") as f:
-            for line in f:
-                p = json.loads(line)
-                seen.add(p["id"])
-                last_ts = p["created_utc"] if last_ts is None else max(last_ts, p["created_utc"])
-    return seen, last_ts
-
-
-def download(start_ts):
-    seen, last_ts = load_existing()
-    if last_ts is not None:
-        print(f"Reanudando: {len(seen)} posts ya guardados, último {fmt(last_ts)}")
-        after = last_ts
-    else:
-        after = start_ts - 1
-    n_req = 0
-    with open(OUT_JSONL, "a", encoding="utf-8") as f:
-        while True:
-            data = api_get("/posts/search", {"subreddit": SUBREDDIT, "sort": "asc",
-                                             "limit": 100, "after": after})
-            n_req += 1
-            new = [p for p in data if p["id"] not in seen]
-            for p in new:
-                f.write(json.dumps(p, ensure_ascii=False) + "\n")
-                seen.add(p["id"])
-            if data:
-                page_last = max(p["created_utc"] for p in data)
-                if n_req % 20 == 0:
-                    print(f"  {n_req} requests, {len(seen)} posts, voy por {fmt(page_last)}")
-                if not new and page_last <= after:
-                    raise ApiError(f"La paginación no avanza (after={after}). Corto para no loopear.")
-                # after es estricto: si en el borde quedaron posts con el mismo segundo,
-                # retrocedo 1s y el dedupe por id evita duplicados.
-                after = page_last - 1 if new else page_last
-            else:
-                age_h = (time.time() - after) / 3600
-                if age_h > 72:
-                    raise ApiError(f"Página vacía inesperada: último post visto {fmt(after)} "
-                                   f"({age_h:.0f} h atrás). Puede faltar data.")
-                break
-            time.sleep(SLEEP_S)
-    print(f"Descarga terminada: {len(seen)} posts en {OUT_JSONL} ({n_req} requests)")
-
-
-def fmt(ts):
-    return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
 
 def norm(s):
@@ -155,7 +58,7 @@ def main():
         print("--sin-descarga: analizo solo lo que ya está en el JSONL (puede ser parcial)")
     else:
         try:
-            download(fp["created_utc"])
+            download("posts", SUBREDDIT, OUT_JSONL)
         except ApiError as e:
             print(f"\nABORTO DESCARGA: {e}\nEl JSONL parcial queda guardado; volver a correr reanuda.")
             sys.exit(1)
@@ -176,7 +79,7 @@ def main():
     q["%junior"] = (100 * q["junior"] / q["posts"]).round(1)
 
     pd.set_option("display.width", 200)
-    print(f"\n2-4. Posts por trimestre (causas = dentro del subconjunto junior)")
+    print("\n2-4. Posts por trimestre (causas = dentro del subconjunto junior)")
     print(f"     Último trimestre ({q.index[-1]}) incompleto: datos hasta {df['date'].max():%Y-%m-%d}.")
     print(q.to_string())
 
