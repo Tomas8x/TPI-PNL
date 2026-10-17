@@ -70,7 +70,24 @@ def edge_item(kind, subreddit, sort):
     return data[0]
 
 
+def repair_tail(path):
+    """Si el proceso se cortó a mitad de una escritura, descarta la última línea incompleta."""
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return
+    with open(path, "rb+") as f:
+        f.seek(0, os.SEEK_END)
+        size = f.tell()
+        f.seek(max(0, size - 1_000_000))
+        tail = f.read()
+        if tail.endswith(b"\n"):
+            return
+        cut = size - len(tail) + tail.rfind(b"\n") + 1
+        f.truncate(cut)
+        print(f"  Reparado {os.path.basename(path)}: descarto {size - cut} bytes de una línea incompleta")
+
+
 def load_existing(path):
+    repair_tail(path)
     seen, last_ts = set(), None
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
