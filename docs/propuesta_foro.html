@@ -1,0 +1,29 @@
+<h3>1. Corpus seleccionado</h3>
+<p>Publicaciones y comentarios de comunidades de Reddit, entre 2020 y 2026:</p>
+<ul>
+<li><a href="https://www.reddit.com/r/devsarg/">r/devsarg</a>: comunidad de programadores argentinos, con unos 43.000 posts y 890.000 comentarios desde 2020. Es el núcleo del corpus.</li>
+<li><a href="https://www.reddit.com/r/empleos_AR/">r/empleos_AR</a>: trabajo en Argentina en general, unos 43.000 posts. Sirve para comparar lo que pasa en IT con el resto del mercado.</li>
+<li><a href="https://www.reddit.com/r/programacion/">r/programacion</a> y <a href="https://www.reddit.com/r/taquerosprogramadores/">r/taquerosprogramadores</a>: comunidades de programación en español (general y México), como contraste fuera de Argentina.</li>
+</ul>
+<p>Los datos se obtienen con la API de <a href="https://github.com/ArthurHeitmann/arctic_shift">Arctic Shift</a>, un archivo público de Reddit.</p>
+<p>Para las ofertas laborales usamos los avisos mensuales de <a href="https://news.ycombinator.com/submitted?id=whoishiring">Hacker News "Ask HN: Who is hiring?"</a>, publicados desde 2011, y el índice de avisos de software de <a href="https://github.com/hiring-lab/job_postings_tracker">Indeed Hiring Lab</a>. Estamos evaluando también fuentes argentinas con historia.</p>
+<p>Fecha de corte: 30/11/2022, lanzamiento de ChatGPT.</p>
+
+<h3>2. Situación o fenómeno</h3>
+<p>Desde fines de 2022 se habla de una crisis del empleo IT: despidos en empresas tecnológicas, menos búsquedas de perfiles junior y herramientas de IA que escriben código. En Argentina se suma el contexto económico. Queremos ver cómo se refleja esto en la conversación de quienes trabajan o quieren trabajar en IT: si cambió el tono, de qué se habla y cómo se habla del trabajo, y si esos cambios acompañan lo que muestran las ofertas laborales.</p>
+
+<h3>3. Hipótesis inicial</h3>
+<p>Desde la llegada de ChatGPT, la conversación sobre trabajo IT en Reddit se volvió más negativa y cambió de tema. Se habla menos de sueldos y de cambiar de trabajo, y más de despidos, de la dificultad para conseguir empleo y de la IA. Además esperamos que:</p>
+<ul>
+<li>el cambio de tono acompañe la caída de las ofertas laborales de software;</li>
+<li>palabras como "trabajo", "junior" o "empresa" aparezcan asociadas a términos distintos antes y después de 2022.</li>
+</ul>
+
+<h3>4. Estrategia preliminar</h3>
+<ul>
+<li><strong>Tono:</strong> análisis de sentimiento y emociones con un modelo en español, por trimestre y por comunidad.</li>
+<li><strong>Temas:</strong> identificación de temas y su evolución en el tiempo, y términos característicos de cada período con TF-IDF.</li>
+<li><strong>Vocabulario:</strong> modelos word2vec entrenados antes y después del corte, comparando las palabras cercanas a términos clave.</li>
+<li><strong>Actores:</strong> entidades nombradas (empresas, tecnologías, herramientas de IA) y su frecuencia en el tiempo.</li>
+<li><strong>Cruce con ofertas:</strong> comparar la serie mensual de sentimiento con la cantidad de avisos y con los perfiles que piden, por ejemplo cuántos avisos mencionan junior o IA.</li>
+</ul>
