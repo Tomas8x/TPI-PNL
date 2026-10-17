@@ -59,3 +59,31 @@ Por cada fuente se documenta el script, los parámetros, la fecha de descarga y 
 - Primera tanda (2026-10-16): 23.267 posts, hasta el 2025-01-03. Cortada a mano para validar.
 - Segunda tanda (2026-10-16): continuó hasta 30.691 posts (agosto de 2025). Cortada a mano para definir el corpus.
 - Pendiente: completar hasta hoy.
+
+## Relevamiento de fuentes de ofertas (2026-10-17)
+
+Búsqueda de fuentes con historia que atraviesen noviembre de 2022. Las URLs se verificaron con requests puntuales, sin descargas masivas.
+
+| Fuente | Tipo | Geografía | Rango | Acceso y licencia | Evaluación |
+|---|---|---|---|---|---|
+| [Djinni, recruitment dataset](https://huggingface.co/datasets/lang-uk/recruitment-dataset-job-descriptions-english) | texto de 141.897 avisos IT, con años de experiencia pedidos | Ucrania | 2020-01 a 2023-09, mensual | Parquet (~146 MB), MIT | único corpus de avisos con texto y período antes y después del corte; la invasión de 2022-02 se mezcla con el efecto ChatGPT |
+| [OEDE / SIPA, empleo trimestral por rama](https://www.argentina.gob.ar/trabajo/estadisticas/oede-estadisticas-nacionales) | serie numérica, incluye "Actividades de informática" | Argentina | anterior a 2020 hasta 2026-T2 | XLSX oficial | mejor serie argentina oficial y actualizada |
+| [Online Labour Index](https://figshare.com/articles/dataset/3761562) | índice diario de proyectos freelance por ocupación, más trabajadores por país | global, incluye Argentina | 2016-05 a 2024-09 | Figshare, CC BY 4.0 | demanda global de software con historia |
+| [CEP XXI, puestos por CLAE](https://datos.produccion.gob.ar/dataset/puestos-de-trabajo-por-sector-productivo) | puestos privados mensuales, CLAE 62, total y jóvenes | Argentina | 2007-01 a 2023-11 (jóvenes hasta 2024-01) | CSV, CC BY 4.0 | tiene el corte de jóvenes, pero termina antes |
+| Hacker News "Who is hiring?" | texto de avisos | global | 2011 a hoy | API de Algolia | ya relevado |
+| [Sysarmy / OpenQube](https://github.com/openqube/openqube-sueldos/tree/master/data/csv/argentina) | encuesta semestral de sueldos, campos cerrados | Argentina | 2014 a 2026 (CSV en GitHub hasta 2021.02, después en Google Sheets) | licencia de datos no explícita | contexto de salarios, no son ofertas |
+| Layoffs.fyi (copia en Kaggle `swaptr/layoffs-2022`) | despidos en empresas tech | global | 2020-03 a 2025-04 | uso con atribución | contexto |
+| Wayback Machine, Get on Board | HTML archivado de avisos | LatAm | 2019 a 2024, 1.000 a 3.000 URLs por año | API CDX | viable, pero la muestra depende de qué archivó Wayback; solo sirve para proporciones |
+
+Descartadas:
+
+- **Get on Board API:** solo devuelve avisos vigentes. El más viejo de la categoría `programming` es de mayo de 2025.
+- **LinkedIn en Kaggle:** solo cubre 2023 y 2024, sin datos de antes del corte.
+- **Remotive:** solo avisos vigentes, y su aviso legal prohíbe redistribuirlos.
+- **Web Data Commons:** son instantáneas anuales en RDF, de 7 GB cada una.
+- **CESSI/OPSSI, Banco Mundial:** solo informes en PDF.
+- **Bumeran:** solo notas de prensa.
+- **UTDT:** no se encontraron datos posteriores a 2013.
+- **TrueUp, OECD.AI:** no se pudieron verificar.
+
+No se encontró texto de avisos argentinos con historia que se pueda descargar.
