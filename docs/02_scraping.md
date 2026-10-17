@@ -43,7 +43,7 @@ Por cada fuente se documenta el script, los parámetros, la fecha de descarga y 
 
   No existen o tienen menos de 50 posts: sysarmy, devsAR, CienciaDeDatos, TrabajoArgentina, ITArgentina, trabajoAR, laburo, freelanceAR. Fuera de r/devsarg no hay otro sub argentino específico de IT con volumen.
 
-- **Descartados:** r/chileIT no tiene datos antes del corte. r/cscareerquestions es demasiado grande para bajarlo entero y la búsqueda por texto de la API no es confiable. En r/empleos_AR, solo ~10% de una muestra de 100 posts eran ofertas ("Solicito empleado/s") y no son específicas de IT.
+- **Descartados:** r/chileIT no tiene datos antes del corte. r/cscareerquestions es demasiado grande para bajarlo entero y la búsqueda por texto de la API no es confiable. Como fuente de ofertas se descarta r/empleos_AR: solo ~10% de una muestra de 100 posts eran ofertas ("Solicito empleado/s") y no son específicas de IT. Sí entra en el corpus de posteos como control.
 - **Comentarios:** `/api/comments/search?link_id=<id>` devuelve todos los comentarios de un post en una request (42 para un post que declaraba 41).
 - **Hacker News:** la API de Algolia lista 185 hilos "Ask HN: Who is hiring?" del usuario `whoishiring`. Cada uno tiene entre 300 y 1.000 avisos como comentarios de primer nivel.
 - **Indeed Hiring Lab:** el repo [hiring-lab/job_postings_tracker](https://github.com/hiring-lab/job_postings_tracker) tiene carpetas para AU, CA, DE, EA, ES, FR, GB, IE, IT, NL y US.
