@@ -8,10 +8,10 @@ Criterio: cada fuente tiene que responder a una hipótesis o a una de las tres c
 
 | Fuente | Rol | Hip. | Costo estimado | Estado |
 |---|---|---|---|---|
-| r/devsarg, posts | núcleo: antes y después | A, C | ~15 min (faltan ~12k) | parcial: 30.691 de ~42.800 |
-| r/devsarg, comentarios | volumen para tono y vocabulario, sobre todo antes del corte | A, C | ~7 h (887k) | pendiente |
-| r/empleos_AR, posts | control: mercado laboral argentino general | A | ~55 min (43k) | pendiente |
-| r/taquerosprogramadores, posts | control: otro país, misma antigüedad que r/devsarg | A | ~20 min (16k) | pendiente |
+| r/devsarg, posts | núcleo: antes y después | A, C | ~15 min (faltan ~12k) | completa: 42.975 |
+| r/devsarg, comentarios | volumen para tono y vocabulario, sobre todo antes del corte | A, C | ~7 h (887k) | completa: 890.705 |
+| r/empleos_AR, posts | control: mercado laboral argentino general | A | ~55 min (43k) | completa: 43.627 |
+| r/taquerosprogramadores, posts | control: otro país (solo después del corte, ver abajo) | A | ~20 min (16k) | completa: 16.120 |
 | Hacker News "Who is hiring?" | texto de avisos: cuántos piden junior o mencionan IA | B | 13 min (184 hilos) | completa: 93.392 avisos |
 | OEDE / SIPA, empleo trimestral por rama | empleo registrado en informática en Argentina | B | 1 archivo (3,4 MB) | completa |
 | Indeed Hiring Lab, avisos por sector (US) | demanda global de software, diaria | B | 1 archivo (12 MB) | completa |
@@ -71,12 +71,39 @@ Scripts:
 
 Prueba de los scripts de Reddit con r/devsAR (18 posts, 28 comentarios): descarga completa, segunda corrida sin duplicados. En esa prueba apareció un error en el criterio de fin, que exigía que el último registro tuviera menos de 72 h y fallaba en subs inactivos. Se reemplazó por la comparación con el registro más reciente.
 
-### r/devsarg, posts
+### Reddit (2026-10-17)
 
-- Script: `scripts/viabilidad_reddit.py --sub devsarg`
-- Primera tanda (2026-10-16): 23.267 posts, hasta el 2025-01-03. Cortada a mano para validar.
-- Segunda tanda (2026-10-16): continuó hasta 30.691 posts (agosto de 2025). Cortada a mano para definir el corpus.
-- Pendiente: completar hasta hoy con `descargar_reddit.py`.
+Las tres primeras descargas de posts se hicieron con `scripts/viabilidad_reddit.py --sub devsarg`, en dos tandas cortadas a mano (23.267 y 30.691 posts). El resto se bajó con `scripts/correr_descargas.py --apagar`, que corre `descargar_reddit.py` en tres líneas paralelas y reanuda cada paso si aborta. Empezó a la 01:16 y terminó a las 16:16.
+
+| Archivo | Registros | Requests | Duración | Rango |
+|---|---|---|---|---|
+| `devsarg_posts.jsonl` | 42.975 | 87 (faltaban 8.323) | 7 min | 2020-08-09 a 2026-10-17 |
+| `devsarg_comments.jsonl` | 890.705 | ~8.900 | ~15 h | 2020-08-28 a 2026-10-17 |
+| `empleos_AR_posts.jsonl` | 43.627 | 443 | 38 min | 2013-02-25 a 2026-10-17 |
+| `empleos_AR_comments.jsonl` | 676.041 | ~6.800 | ~10 h | 2013-02-25 a 2026-10-17 |
+| `taquerosprogramadores_posts.jsonl` | 16.120 | 165 | 11 min | 2020-08-19 a 2026-10-17 |
+| `taquerosprogramadores_comments.jsonl` | 303.216 | 3.065 | 4 h 47 min | 2023-07-18 a 2026-10-17 |
+
+- El servidor dio más de 800 timeouts entre las tres líneas. Los comentarios de r/devsarg y de r/empleos_AR abortaron después de tres fallos seguidos; el runner esperó 10 minutos y los retomó sin perder registros.
+- No hay ids duplicados en ningún archivo.
+- **r/taquerosprogramadores no sirve para comparar antes y después.** Tiene 1 post anterior al corte y el primer comentario es de julio de 2023: el sub se activó en 2023-T3. Solo sirve como control de país dentro del período posterior.
+- **El período anterior al corte es chico.** En r/devsarg son 2.114 posts y 32.254 comentarios (el 5% y el 4% del total), y en r/empleos_AR 2.276 posts y 21.357 comentarios. Los dos subs crecieron mucho después del corte, así que las comparaciones tienen que usar proporciones, no conteos absolutos.
+
+Registros por trimestre (posts y comentarios):
+
+| Trimestre | devsarg posts | devsarg com. | empleos_AR posts | empleos_AR com. | taqueros posts | taqueros com. |
+|---|---|---|---|---|---|---|
+| 2021-T1 | 65 | 506 | 196 | 1.675 | 0 | 0 |
+| 2021-T3 | 89 | 794 | 182 | 1.016 | 0 | 0 |
+| 2022-T1 | 192 | 2.426 | 185 | 2.258 | 0 | 0 |
+| 2022-T3 | 636 | 10.786 | 109 | 1.647 | 0 | 0 |
+| 2022-T4 | 807 | 14.599 | 574 | 13.448 | 0 | 0 |
+| 2023-T1 | 1.150 | 24.475 | 880 | 19.086 | 0 | 0 |
+| 2023-T3 | 2.457 | 51.400 | 1.347 | 27.008 | 54 | 851 |
+| 2024-T1 | 3.434 | 69.734 | 2.062 | 36.265 | 1.112 | 21.391 |
+| 2025-T1 | 2.741 | 53.678 | 3.332 | 49.601 | 1.562 | 32.237 |
+| 2026-T1 | 2.993 | 63.651 | 4.006 | 56.885 | 1.514 | 24.521 |
+| 2026-T3 | 2.485 | 53.463 | 4.234 | 61.338 | 1.268 | 24.556 |
 
 ### Hacker News "Who is hiring?"
 
@@ -89,12 +116,17 @@ Prueba de los scripts de Reddit con r/devsAR (18 posts, 28 comentarios): descarg
   |---|---|---|---|---|---|---|---|
   | 8.439 | 7.125 | 10.285 | 7.584 | 4.171 | 3.923 | 4.037 | 2.952 |
 
-- No se bajaron los hilos "Who wants to be hired?" (147, gente que busca trabajo). Quedan como opción.
+- "Who wants to be hired?" (gente que busca trabajo), 2026-10-17: 147 hilos, de julio de 2014 a octubre de 2026, 38.100 comentarios en `data/raw/hn/whowantstobehired.jsonl` (47 MB). No entra en la consolidación por ahora.
+
+### Djinni
+
+- Script: `scripts/descargar_series.py`, 2026-10-17. Parquet de 146 MB (sha256 `71dddaf0d9660f34...`) en `data/raw/djinni/`.
+- Queda de reserva, por los motivos de arriba. Para leerlo hace falta `pyarrow`, que no está instalado.
 
 ### Series numéricas
 
 - Script: `scripts/descargar_series.py`, 2026-10-17.
-- `sipa_empleo_trimestral_por_rama.xlsx` (3,4 MB, sha256 `488d891136a116c1...`): de 1996-T1 a 2026, trimestral. La rama 72 es "Actividades de informática" (cuadro C4) y la 722, "Servicios de consultores en informática y suministros de programas" (cuadro C6).
+- `sipa_empleo_trimestral_por_rama.xlsx` (3,4 MB, sha256 `488d891136a116c1...`): de 1996-T1 a 2026-T1, trimestral. La rama 72 es "Actividades de informática" (cuadro C4) y la 722, "Servicios de consultores en informática y suministros de programas" (cuadro C6).
 - `indeed_job_postings_by_sector_US.csv` (12 MB, sha256 `11501409680563c0...`): "Software Development" en EE.UU., diario, del 2020-02-01 al 2026-10-09, con índice base 100 al 2020-02-01. El último valor es 81,55 (`new postings`). Hay variables `total postings` y `new postings`.
 
 ## Relevamiento de fuentes de ofertas (2026-10-17)
@@ -104,7 +136,7 @@ Búsqueda de fuentes con historia que atraviesen noviembre de 2022. Las URLs se 
 | Fuente | Tipo | Geografía | Rango | Acceso y licencia | Evaluación |
 |---|---|---|---|---|---|
 | [Djinni, recruitment dataset](https://huggingface.co/datasets/lang-uk/recruitment-dataset-job-descriptions-english) | texto de 141.897 avisos IT, con años de experiencia pedidos | Ucrania | 2020-01 a 2023-09, mensual | Parquet (~146 MB), MIT | único corpus de avisos con texto y período antes y después del corte; la invasión de 2022-02 se mezcla con el efecto ChatGPT |
-| [OEDE / SIPA, empleo trimestral por rama](https://www.argentina.gob.ar/trabajo/estadisticas/oede-estadisticas-nacionales) | serie numérica, incluye "Actividades de informática" | Argentina | anterior a 2020 hasta 2026-T2 | XLSX oficial | mejor serie argentina oficial y actualizada |
+| [OEDE / SIPA, empleo trimestral por rama](https://www.argentina.gob.ar/trabajo/estadisticas/oede-estadisticas-nacionales) | serie numérica, incluye "Actividades de informática" | Argentina | 1996-T1 a 2026-T1 | XLSX oficial | mejor serie argentina oficial y actualizada |
 | [Online Labour Index](https://figshare.com/articles/dataset/3761562) | índice diario de proyectos freelance por ocupación, más trabajadores por país | global, incluye Argentina | 2016-05 a 2024-09 | Figshare, CC BY 4.0 | demanda global de software con historia |
 | [CEP XXI, puestos por CLAE](https://datos.produccion.gob.ar/dataset/puestos-de-trabajo-por-sector-productivo) | puestos privados mensuales, CLAE 62, total y jóvenes | Argentina | 2007-01 a 2023-11 (jóvenes hasta 2024-01) | CSV, CC BY 4.0 | tiene el corte de jóvenes, pero termina antes |
 | Hacker News "Who is hiring?" | texto de avisos | global | 2011 a hoy | API de Algolia | ya relevado |
