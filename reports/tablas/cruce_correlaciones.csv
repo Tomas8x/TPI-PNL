@@ -1,0 +1,45 @@
+subreddit,mercado,frecuencia,rezago,spearman_niveles,p_niveles,spearman_variaciones,p_variaciones,n
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,0,-0.711,0.0,0.097,0.4388,67
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,1,-0.728,0.0,0.002,0.989,66
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,2,-0.733,0.0,-0.012,0.9262,65
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,3,-0.76,0.0,-0.017,0.8975,64
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,4,-0.775,0.0,0.009,0.9422,63
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,5,-0.788,0.0,-0.127,0.3292,62
+devsarg,Indeed: avisos nuevos de software (EE.UU.),mensual,6,-0.795,0.0,-0.004,0.9773,61
+devsarg,Hacker News: avisos por hilo,mensual,0,-0.793,0.0,0.082,0.5106,67
+devsarg,Hacker News: avisos por hilo,mensual,1,-0.76,0.0,-0.209,0.0952,66
+devsarg,Hacker News: avisos por hilo,mensual,2,-0.721,0.0,0.065,0.6118,65
+devsarg,Hacker News: avisos por hilo,mensual,3,-0.752,0.0,0.075,0.5608,64
+devsarg,Hacker News: avisos por hilo,mensual,4,-0.717,0.0,-0.322,0.0106,63
+devsarg,Hacker News: avisos por hilo,mensual,5,-0.689,0.0,0.205,0.1121,62
+devsarg,Hacker News: avisos por hilo,mensual,6,-0.727,0.0,0.031,0.8148,61
+devsarg,Hacker News: % de avisos junior,mensual,0,-0.197,0.1106,0.066,0.5985,67
+devsarg,Hacker News: % de avisos junior,mensual,1,-0.275,0.0254,-0.097,0.4398,66
+devsarg,Hacker News: % de avisos junior,mensual,2,-0.231,0.0643,0.218,0.0841,65
+devsarg,Hacker News: % de avisos junior,mensual,3,-0.252,0.045,-0.222,0.08,64
+devsarg,Hacker News: % de avisos junior,mensual,4,-0.174,0.1717,-0.099,0.4421,63
+devsarg,Hacker News: % de avisos junior,mensual,5,-0.077,0.551,0.267,0.0375,62
+devsarg,Hacker News: % de avisos junior,mensual,6,-0.167,0.1991,-0.05,0.707,61
+devsarg,SIPA: empleo registrado en informática (AR),trimestral,0,0.941,0.0,0.234,0.3831,20
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,0,-0.671,0.0,0.12,0.3379,67
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,1,-0.707,0.0,-0.136,0.2811,66
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,2,-0.697,0.0,-0.226,0.0721,65
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,3,-0.673,0.0,0.001,0.994,64
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,4,-0.653,0.0,0.255,0.0451,63
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,5,-0.69,0.0,-0.125,0.3384,62
+empleos_AR,Indeed: avisos nuevos de software (EE.UU.),mensual,6,-0.685,0.0,-0.035,0.7912,61
+empleos_AR,Hacker News: avisos por hilo,mensual,0,-0.653,0.0,0.118,0.3447,67
+empleos_AR,Hacker News: avisos por hilo,mensual,1,-0.688,0.0,-0.185,0.1393,66
+empleos_AR,Hacker News: avisos por hilo,mensual,2,-0.684,0.0,0.007,0.9554,65
+empleos_AR,Hacker News: avisos por hilo,mensual,3,-0.655,0.0,0.036,0.7798,64
+empleos_AR,Hacker News: avisos por hilo,mensual,4,-0.582,0.0,0.145,0.2621,63
+empleos_AR,Hacker News: avisos por hilo,mensual,5,-0.58,0.0,-0.106,0.4154,62
+empleos_AR,Hacker News: avisos por hilo,mensual,6,-0.654,0.0,-0.048,0.7175,61
+empleos_AR,Hacker News: % de avisos junior,mensual,0,-0.188,0.1275,0.003,0.9781,67
+empleos_AR,Hacker News: % de avisos junior,mensual,1,-0.156,0.2119,0.022,0.8649,66
+empleos_AR,Hacker News: % de avisos junior,mensual,2,-0.156,0.2151,0.082,0.5179,65
+empleos_AR,Hacker News: % de avisos junior,mensual,3,-0.229,0.0689,-0.182,0.1534,64
+empleos_AR,Hacker News: % de avisos junior,mensual,4,-0.215,0.0904,0.121,0.3508,63
+empleos_AR,Hacker News: % de avisos junior,mensual,5,-0.152,0.2383,0.103,0.4276,62
+empleos_AR,Hacker News: % de avisos junior,mensual,6,-0.368,0.0035,-0.284,0.0277,61
+empleos_AR,SIPA: empleo registrado en informática (AR),trimestral,0,0.98,0.0,0.282,0.2893,20

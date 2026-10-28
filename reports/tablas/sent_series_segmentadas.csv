@@ -1,0 +1,7 @@
+subreddit,termino,estimacion,ic_inf,ic_sup,p_valor,meses
+devsarg,pendiente antes (pp/mes),0.762,0.668,0.857,0.0,68
+devsarg,salto en el corte (pp),2.516,0.843,4.19,0.0032,68
+devsarg,cambio de pendiente (pp/mes),-0.597,-0.723,-0.471,0.0,68
+empleos_AR,pendiente antes (pp/mes),0.521,0.33,0.712,0.0,68
+empleos_AR,salto en el corte (pp),6.998,4.419,9.577,0.0,68
+empleos_AR,cambio de pendiente (pp/mes),-0.394,-0.585,-0.204,0.0001,68

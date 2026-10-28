@@ -1,0 +1,7 @@
+diccionario,etiquetadas,correctas,precision
+junior,30,27,0.9
+senior,30,28,0.93
+ia,30,30,1.0
+ia_encabezado,30,29,0.97
+ia_herramientas,30,26,0.87
+remoto,30,30,1.0
