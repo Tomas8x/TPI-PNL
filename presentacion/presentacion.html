@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>¿Cambió la conversación sobre trabajo IT desde ChatGPT?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --superficie: #fcfcfb;
+    --plano: #f3f2ee;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
+    --tenue: #898781;
+    --borde: #e1e0d9;
+    --oscuro: #121417;
+    --oscuro-2: #1d2026;
+    --tinta-osc: #f0efec;
+    --tinta-osc-2: #b9b8b0;
+    --azul: #2a78d6;
+    --azul-osc: #6aa4ec;
+    --rojo: #d03b3b;
+    --ambar: #b86e00;
+    --verde: #0a7d0a;
+    --fuente: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #2a2b2e; font-family: var(--fuente); }
+  body { overflow: hidden; }
+
+  /* Lienzo fijo de 1280 x 720 que se escala a la ventana */
+  .escenario { position: fixed; inset: 0; display: grid; place-items: center; }
+  .lienzo { width: 1280px; height: 720px; position: relative; transform-origin: center center; }
+  .diapo {
+    position: absolute; inset: 0; padding: 56px 72px 48px;
+    background: var(--superficie); color: var(--tinta);
+    display: none; flex-direction: column;
+  }
+  .diapo.activa { display: flex; }
+  .diapo.oscura { background: var(--oscuro); color: var(--tinta-osc); }
+
+  .kicker { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); font-weight: 600; margin: 0 0 14px; }
+  .oscura .kicker { color: var(--tinta-osc-2); }
+  h1 { font-size: 40px; line-height: 1.12; margin: 0; font-weight: 700; letter-spacing: -.01em; max-width: 1080px; }
+  h2 { font-size: 34px; line-height: 1.15; margin: 0 0 26px; font-weight: 700; letter-spacing: -.01em; max-width: 1120px; }
+  p { margin: 0; }
+
+  .num { position: absolute; right: 72px; bottom: 22px; font-size: 13px; color: var(--tenue); font-variant-numeric: tabular-nums; }
+  .oscura .num { color: var(--tinta-osc-2); }
+  .fuente { position: absolute; left: 72px; bottom: 22px; font-size: 12px; color: var(--tenue); max-width: 1000px; }
+
+  /* Figura + columna de cifras */
+  .cuerpo { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 36px; min-height: 0; }
+  .figura { min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .figura img { max-width: 100%; max-height: 100%; display: block; }
+  .cifras { display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+  .cifra .valor { font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: -.02em; color: var(--tinta); }
+  .cifra .valor.chico { font-size: 34px; }
+  .cifra .etiqueta { font-size: 15px; line-height: 1.35; color: var(--tinta-2); margin-top: 6px; }
+
+  /* Portada */
+  .portada { justify-content: center; }
+  .portada h1 { font-size: 58px; max-width: 1000px; }
+  .portada .bajada { font-size: 24px; color: var(--tinta-osc-2); margin-top: 22px; max-width: 900px; line-height: 1.35; }
+  .portada .pie { position: absolute; left: 72px; bottom: 48px; font-size: 16px; color: var(--tinta-osc-2); }
+  .portada .marca { position: absolute; right: 72px; top: 56px; width: 260px; height: 140px; }
+
+  /* Corpus */
+  .grilla { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .tarjeta { background: var(--plano); border-radius: 12px; padding: 18px 20px 16px; }
+  .tarjeta .valor { font-size: 46px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+  .tarjeta .etiqueta { font-size: 15px; color: var(--tinta-2); margin-top: 10px; line-height: 1.4; }
+  .subs { list-style: none; padding: 0; margin: 10px 0 0; font-size: 15px; line-height: 1.55; color: var(--tinta-2); }
+  .subs b { color: var(--tinta); font-weight: 600; }
+  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; }
+  .caja { border: 1px solid var(--borde); border-radius: 12px; padding: 16px 22px; }
+  .caja h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); margin: 0 0 12px; font-weight: 600; }
+  .caja p, .caja li { font-size: 17px; line-height: 1.45; }
+  .caja ul { margin: 0; padding-left: 20px; }
+  .aviso { margin-top: 18px; font-size: 17px; color: var(--tinta-2); }
+  .aviso b { color: var(--tinta); }
+  .linea-tiempo { margin-top: 16px; }
+  .linea-tiempo h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); margin: 0 0 4px; font-weight: 600; }
+  .linea-tiempo svg { display: block; width: 100%; height: 96px; overflow: visible; }
+  .linea-tiempo text { font-family: var(--fuente); font-size: 13px; fill: var(--tinta-2); }
+  .linea-tiempo .anio { fill: var(--tenue); font-size: 12px; }
+  .linea-tiempo .clave { fill: var(--tinta); font-weight: 700; }
+
+  /* Vocabulario */
+  .vocab { flex: 1; min-height: 0; margin-bottom: 18px; display: grid; grid-template-columns: 1fr 1fr 300px; gap: 28px; }
+  .palabra { border: 1px solid var(--borde); border-radius: 12px; padding: 40px 24px 20px; display: flex; flex-direction: column; }
+  .palabra .termino { font-size: 36px; font-weight: 700; margin-bottom: 10px; }
+  .palabra .termino span { font-size: 15px; font-weight: 500; color: var(--tinta-2); margin-left: 8px; }
+  .periodo { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); font-weight: 600; margin: 6px 0 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip { font-size: 18px; padding: 5px 13px; border-radius: 999px; background: var(--plano); color: var(--tinta); }
+  .chip.nuevo { background: #dce9fa; }
+  .nota-chip { font-size: 15px; color: var(--tinta-2); margin-top: 6px; }
+  .muestra-chip { display: inline-block; width: 12px; height: 12px; border-radius: 999px; background: #dce9fa; vertical-align: -1px; margin-right: 4px; }
+
+  /* Conclusión */
+  .tabla-hip { width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 4px; }
+  .tabla-hip td { padding: 13px 14px; border-bottom: 1px solid #2f333b; vertical-align: top; line-height: 1.35; }
+  .tabla-hip td:first-child { width: 380px; color: var(--tinta-osc); font-weight: 600; }
+  .tabla-hip td:nth-child(2) { width: 150px; white-space: nowrap; }
+  .tabla-hip td:last-child { color: var(--tinta-osc-2); }
+  .estado { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  .estado.parcial { background: #3a2f12; color: #fab219; }
+  .estado.no { background: #3a1a1a; color: #f08a8a; }
+  .cierre { margin-top: 24px; font-size: 22px; line-height: 1.4; color: var(--tinta-osc); max-width: 1100px; }
+  .cierre b { color: #fff; }
+  .advertencia { margin-top: 12px; font-size: 15px; color: var(--tinta-osc-2); }
+
+  /* Notas del orador (tecla N) */
+  .notas { display: none; }
+  .panel-notas {
+    position: fixed; left: 0; right: 0; bottom: 0; max-height: 34%; overflow: auto;
+    background: rgba(18, 20, 23, .96); color: #f0efec; font-size: 17px; line-height: 1.5;
+    padding: 16px 28px 20px; display: none; border-top: 1px solid #3a3d44;
+  }
+  .panel-notas.visible { display: block; }
+  .panel-notas small { color: #b9b8b0; display: block; margin-bottom: 6px; }
+  .ayuda { position: fixed; right: 14px; top: 10px; font-size: 12px; color: #9a9890; opacity: .0; transition: opacity .3s; }
+  body:hover .ayuda { opacity: .9; }
+
+  /* Vista con todas las diapositivas (impresión a PDF o revisión) */
+  body.todas { overflow: auto; background: #2a2b2e; }
+  body.todas .escenario { position: static; display: block; padding: 24px 0; }
+  body.todas .lienzo { transform: none !important; height: auto; margin: 0 auto; width: 1280px; }
+  body.todas .diapo { position: relative; display: flex; height: 720px; margin-bottom: 24px; }
+  body.todas .ayuda, body.todas .panel-notas { display: none !important; }
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { background: none; overflow: visible; }
+    .escenario { position: static; display: block; }
+    .lienzo { transform: none !important; height: auto; }
+    .diapo { position: relative; display: flex !important; height: 720px; break-after: page; }
+    .ayuda, .panel-notas { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="escenario"><div class="lienzo" id="lienzo">
+
+<!-- 1. Portada -->
+<section class="diapo oscura portada">
+  <svg class="marca" viewBox="0 0 260 140" aria-hidden="true">
+    <polyline fill="none" stroke="#6aa4ec" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+      points="6,124 34,116 62,104 90,88 118,62 146,46 174,40 202,38 230,34 254,30"/>
+    <line x1="132" y1="6" x2="132" y2="134" stroke="#b9b8b0" stroke-width="2" stroke-dasharray="6 5"/>
+  </svg>
+  <p class="kicker">TPI · Procesamiento del Lenguaje Natural · UGR</p>
+  <h1>¿Cambió la conversación sobre trabajo IT desde ChatGPT?</h1>
+  <p class="bajada">Tono, temas y vocabulario en 1,9 millones de textos de Reddit, de 2021 a 2026, comparados con las ofertas de trabajo.</p>
+  <p class="pie">Grupo DIS-A-CLCD · Noviembre de 2026</p>
+  <span class="num"></span>
+  <aside class="notas">Presentarnos. La pregunta es si la llegada de ChatGPT, el 30 de noviembre de 2022, cambió cómo se habla del trabajo IT en Reddit. Spoiler: cambió, pero no cuando esperábamos.</aside>
+</section>
+
+<!-- 2. Corpus -->
+<section class="diapo">
+  <p class="kicker">Corpus y método</p>
+  <h2>Qué analizamos</h2>
+  <div class="grilla">
+    <div class="tarjeta"><div class="valor">1,9 M</div><div class="etiqueta">posts y comentarios de Reddit (Arctic Shift), de enero de 2021 a septiembre de 2026</div></div>
+    <div class="tarjeta"><div class="valor">3</div>
+      <ul class="subs"><li><b>r/devsarg</b>, programadores AR</li><li><b>r/empleos_AR</b>, trabajo en general</li><li><b>r/taquerosprogramadores</b>, México</li></ul></div>
+    <div class="tarjeta"><div class="valor">93 mil</div><div class="etiqueta">avisos de Hacker News "Who is hiring?", más las series de Indeed (EE.UU.) y SIPA (Argentina)</div></div>
+    <div class="tarjeta"><div class="valor">30/11/22</div><div class="etiqueta">corte: lanzamiento de ChatGPT. Comparamos antes y después</div></div>
+  </div>
+  <div class="fila">
+    <div class="caja"><h3>Técnicas</h3>
+      <ul>
+        <li>Sentimiento y emociones con RoBERTuito (pysentimiento)</li>
+        <li>Temas: diccionarios, TF-IDF y BERTopic</li>
+        <li>Vocabulario: word2vec antes y después del corte</li>
+        <li>Actores: entidades nombradas (spaCy) y diccionario de herramientas de IA</li>
+      </ul></div>
+    <div class="caja"><h3>Cuidado con el volumen</h3>
+      <p>Antes del corte hay solo el <b>5%</b> de los textos: r/devsarg pasó de ~80 posts por trimestre en 2021 a más de 2.500. Por eso comparamos <b>proporciones por mes o trimestre</b>, nunca cantidades.</p></div>
+  </div>
+  <div class="linea-tiempo">
+    <h3>Lo que pasó alrededor del corte</h3>
+    <svg viewBox="0 0 1136 96" role="img" aria-label="Línea de tiempo 2021 a 2026: Copilot, suba de tasas de la Fed, ChatGPT, despidos tech, GPT-4, devaluación, Claude 3 y fin del cepo">
+      <line x1="20" y1="48" x2="1116" y2="48" stroke="#c3c2b7" stroke-width="2"/>
+      <line x1="20" y1="44" x2="20" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="20" y="92" text-anchor="middle">2021</text>
+      <line x1="211" y1="44" x2="211" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="211" y="92" text-anchor="middle">2022</text>
+      <line x1="401" y1="44" x2="401" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="401" y="92" text-anchor="middle">2023</text>
+      <line x1="592" y1="44" x2="592" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="592" y="92" text-anchor="middle">2024</text>
+      <line x1="783" y1="44" x2="783" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="783" y="92" text-anchor="middle">2025</text>
+      <line x1="973" y1="44" x2="973" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="973" y="92" text-anchor="middle">2026</text>
+      <circle cx="113" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="113" y="30" text-anchor="middle">Copilot (preview)</text>
+      <circle cx="249" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="249" y="72" text-anchor="middle">Suba de tasas Fed</text>
+      <circle cx="384" cy="48" r="7" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="2"/><text class="clave" x="384" y="30" text-anchor="middle">ChatGPT</text>
+      <circle cx="411" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="411" y="72" text-anchor="middle">Despidos Google y Microsoft</text>
+      <circle cx="439" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="439" y="30" text-anchor="middle">GPT-4</text>
+      <circle cx="582" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="582" y="72" text-anchor="middle">Devaluación 54%</text>
+      <circle cx="625" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="625" y="30" text-anchor="middle">Claude 3</text>
+      <circle cx="837" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="837" y="72" text-anchor="middle">Fin del cepo</text>
+    </svg>
+  </div>
+  <span class="num"></span>
+  <aside class="notas">Tres comunidades: r/devsarg es el núcleo; r/empleos_AR es el control de "trabajo en general en Argentina"; r/taquerosprogramadores es el control de otro país, pero recién tiene datos desde mediados de 2023. Del lado del mercado, avisos con texto de Hacker News y dos series numéricas. Lo más importante del método: como los subs crecieron muchísimo, todo se mide en proporciones.</aside>
+</section>
+
+<!-- 3. Tono -->
+<section class="diapo">
+  <p class="kicker">Hipótesis A · Tono</p>
+  <h2>La conversación se volvió más negativa, pero empezó antes de ChatGPT</h2>
+  <div class="cuerpo">
+    <div class="figura"><img src="../reports/figures/pres_tono_mensual.png" alt="Porcentaje de textos negativos por mes en r/devsarg y r/empleos_AR, de 2021 a 2026, con la tendencia de r/devsarg. Sube 0,76 puntos por mes antes del corte y 0,17 después."></div>
+    <div class="cifras">
+      <div class="cifra"><div class="valor">17% a 37%</div><div class="etiqueta">textos negativos en r/devsarg, de 2021 a 2026</div></div>
+      <div class="cifra"><div class="valor chico">+2,5 pts</div><div class="etiqueta">salto en diciembre de 2022 (IC 0,8 a 4,2), chico al lado de la tendencia previa</div></div>
+      <div class="cifra"><div class="valor chico">82%</div><div class="etiqueta">coincidencia del clasificador con una revisión manual de 60 textos</div></div>
+    </div>
+  </div>
+  <span class="fuente">Clasificador RoBERTuito (pysentimiento) sobre los 1,9 millones de textos. Regresión segmentada con errores HAC.</span>
+  <span class="num"></span>
+  <aside class="notas">Clasificamos los 1,9 millones de textos. La negatividad sube mucho, pero la mitad de la subida ocurre antes de ChatGPT: durante 2021 y 2022 crecía casi un punto por mes. Después del corte sigue subiendo, pero cuatro veces más lento. ChatGPT coincide con el final de la subida, no con el comienzo.</aside>
+</section>
+
+<!-- 4. No es solo IT -->
+<section class="diapo">
+  <p class="kicker">Hipótesis A · Tono</p>
+  <h2>Pasa lo mismo en el trabajo en general y en México</h2>
+  <div class="cuerpo">
+    <div class="figura"><img src="../reports/figures/pres_tono_tres_subs.png" alt="Porcentaje de textos negativos por trimestre en los tres subreddits. Las tres curvas suben juntas."></div>
+    <div class="cifras">
+      <div class="cifra"><div class="valor chico">−1,6 pts</div><div class="etiqueta">diferencia entre el cambio de r/devsarg y el de r/empleos_AR (IC 95%: −3,8 a 0,8). No es propio de IT</div></div>
+      <div class="cifra"><div class="valor chico">6% a 13%</div><div class="etiqueta">enojo medio en r/devsarg, de 2021 a 2023</div></div>
+      <div class="cifra"><div class="valor chico">8% a 5%</div><div class="etiqueta">alegría media en r/devsarg, de 2021 a 2026</div></div>
+    </div>
+  </div>
+  <span class="fuente">Diferencia en diferencias con bootstrap por hilos. Emociones: robertuito-emotion-analysis, probabilidad media.</span>
+  <span class="num"></span>
+  <aside class="notas">Si fuera un efecto de la IA sobre los programadores, r/devsarg tendría que empeorar más que r/empleos_AR. No pasa: los dos suben igual. Y el sub mexicano, desde que tiene datos, sigue la misma trayectoria, así que tampoco es la economía argentina. El cambio de tono es sobre todo más enojo y menos alegría.</aside>
+</section>
+
+<!-- 5. Temas e IA -->
+<section class="diapo">
+  <p class="kicker">Hipótesis A · Temas</p>
+  <h2>La IA es el gran cambio de temas, y llega en dos escalones</h2>
+  <div class="cuerpo">
+    <div class="figura"><img src="../reports/figures/pres_ia_por_sub.png" alt="Porcentaje de textos que mencionan la IA por trimestre en los tres subreddits. Primer escalón en 2023, segundo desde 2025; r/devsarg llega a 13%."></div>
+    <div class="cifras">
+      <div class="cifra"><div class="valor chico">1 de cada 8</div><div class="etiqueta">textos de r/devsarg que mencionan la IA en 2026. Antes del corte, menos de 1 de cada 100</div></div>
+      <div class="cifra"><div class="valor chico">47% Claude</div><div class="etiqueta">de las menciones de herramientas de IA en el tercer trimestre de 2026. ChatGPT tenía el 92% en 2023</div></div>
+      <div class="cifra"><div class="valor chico">14% a 7%</div><div class="etiqueta">posts sobre aprender a programar. Sueldos y cambio de trabajo no bajan</div></div>
+    </div>
+  </div>
+  <span class="fuente">Diccionario de términos de IA sobre posts y comentarios. Temas: diccionarios validados a mano y BERTopic sobre 83 mil posts.</span>
+  <span class="num"></span>
+  <aside class="notas">La IA es lo que más cambia, pero en dos escalones: un primer salto en 2023 con ChatGPT y uno mucho mayor en 2025 y 2026 con las herramientas para programar. Pasa igual en México. En 2026 Claude ya se nombra más que ChatGPT. Los despidos también suben (de 0,35% a 1,18% de los comentarios), pero de a poco desde 2022. La parte de la hipótesis que decía que se iba a hablar menos de sueldos y de cambiar de trabajo no se cumple. Lo que sí cae es aprender a programar: cursos, bootcamps, academias.</aside>
+</section>
+
+<!-- 6. Vocabulario -->
+<section class="diapo">
+  <p class="kicker">Hipótesis C · Vocabulario</p>
+  <h2>"IA" cambió de significado; "trabajo" y "junior", no</h2>
+  <div class="vocab">
+    <div class="palabra">
+      <div class="termino">ia <span>vecinos más cercanos (word2vec)</span></div>
+      <div class="periodo">Antes del corte</div>
+      <div class="chips"><span class="chip">artificial</span><span class="chip">ciencia</span><span class="chip">científicos</span><span class="chip">ciencias</span><span class="chip">estadística</span><span class="chip">computación</span></div>
+      <div class="periodo">Después</div>
+      <div class="chips"><span class="chip nuevo">chatgpt</span><span class="chip nuevo">agentes</span><span class="chip nuevo">llm</span><span class="chip nuevo">claude</span><span class="chip nuevo">gpt</span><span class="chip nuevo">reemplazar</span><span class="chip nuevo">herramienta</span></div>
+      <p class="nota-chip"><span class="muestra-chip"></span>vecino que no aparece antes del corte</p>
+    </div>
+    <div class="palabra">
+      <div class="termino">remoto</div>
+      <div class="periodo">Antes del corte</div>
+      <div class="chips"><span class="chip">relocalización</span><span class="chip">latam</span><span class="chip">España</span><span class="chip">Colombia</span><span class="chip">afuera</span><span class="chip">Chile</span></div>
+      <div class="periodo">Después</div>
+      <div class="chips"><span class="chip nuevo">híbrido</span><span class="chip nuevo">presencial</span><span class="chip nuevo">contractor</span><span class="chip nuevo">fulltime</span><span class="chip">afuera</span><span class="chip nuevo">homeoffice</span></div>
+      <p class="nota-chip">De "trabajar para afuera" a una modalidad más</p>
+    </div>
+    <div class="cifras">
+      <div class="cifra"><div class="valor chico">0,08 vs. 0,29</div><div class="etiqueta">vecinos compartidos por "ia" entre períodos, contra dos muestras del mismo período</div></div>
+      <div class="cifra"><div class="valor chico">65 a 808</div><div class="etiqueta">apariciones de "ia" por millón de palabras</div></div>
+      <div class="cifra"><div class="valor chico">Sin cambio</div><div class="etiqueta">"trabajo", "junior" y "empresa": su cambio está dentro del ruido del modelo</div></div>
+    </div>
+  </div>
+  <span class="fuente">Word2vec skip-gram, 5 semillas por período; el corpus de después se submuestrea al tamaño del de antes (2,25 M de palabras).</span>
+  <span class="num"></span>
+  <aside class="notas">Entrenamos word2vec antes y después, con corpus del mismo tamaño, y comparamos los vecinos de cada palabra. Para saber si un cambio es real, lo comparamos con lo que cambian dos modelos del mismo período. "IA" pasa de ser un término académico a ser productos: chatgpt, claude, agentes, y aparece "reemplazar". Las palabras que nombraba la hipótesis, trabajo, junior y empresa, no cambian más que el ruido. Así que la hipótesis C se cumple para pocas palabras, no para las que esperábamos.</aside>
+</section>
+
+<!-- 7. Mercado -->
+<section class="diapo">
+  <p class="kicker">Hipótesis B · Mercado</p>
+  <h2>Los avisos de software ya caían antes de ChatGPT</h2>
+  <div class="cuerpo">
+    <div class="figura"><img src="../reports/figures/pres_mercado.png" alt="Índice base noviembre de 2022 igual a 100: avisos de software en Indeed y Hacker News caen desde 2022; el empleo informático registrado en Argentina sigue creciendo."></div>
+    <div class="cifras">
+      <div class="cifra"><div class="valor chico">−36% y −44%</div><div class="etiqueta">avisos de software en EE.UU.: de febrero a noviembre de 2022, y después del corte</div></div>
+      <div class="cifra"><div class="valor chico">+7,3%</div><div class="etiqueta">empleo informático registrado en Argentina, de fines de 2022 a fines de 2025</div></div>
+      <div class="cifra"><div class="valor chico">−0,71 / 0,10</div><div class="etiqueta">correlación entre tono y avisos: fuerte en la tendencia, nula mes a mes</div></div>
+    </div>
+  </div>
+  <span class="fuente">Indeed Hiring Lab, Hacker News "Who is hiring?", OEDE/SIPA. Correlación de Spearman, marzo de 2021 a septiembre de 2026.</span>
+  <span class="num"></span>
+  <aside class="notas">Los avisos de software empezaron a caer en febrero de 2022, nueve meses antes de ChatGPT, con la suba de tasas y los despidos tech. En Argentina el empleo informático registrado no cayó. Tono y avisos correlacionan fuerte en niveles, porque uno sube y el otro baja en el mismo período, pero mes a mes no se mueven juntos. La hipótesis B se sostiene solo en la versión débil.</aside>
+</section>
+
+<!-- 8. Conclusión -->
+<section class="diapo oscura">
+  <p class="kicker">Conclusión</p>
+  <h2>ChatGPT no es el punto de quiebre: es una etapa de un cambio que empezó antes</h2>
+  <table class="tabla-hip">
+    <tr><td>A. Tono más negativo</td><td><span class="estado parcial">◐ En parte</span></td><td>Sube de 17% a 37%, pero empieza en 2021 y es igual fuera de IT</td></tr>
+    <tr><td>A. Más IA, despidos y búsqueda</td><td><span class="estado parcial">◐ En parte</span></td><td>IA y despidos sí; búsqueda de empleo baja en r/devsarg</td></tr>
+    <tr><td>A. Menos sueldos y cambio de trabajo</td><td><span class="estado no">✕ No</span></td><td>Se habla más de sueldos; lo que cae es aprender a programar</td></tr>
+    <tr><td>B. El tono sigue a las ofertas</td><td><span class="estado parcial">◐ En parte</span></td><td>Coinciden en la tendencia de varios años, no mes a mes</td></tr>
+    <tr><td>C. Cambia "trabajo", "junior", "empresa"</td><td><span class="estado no">✕ No</span></td><td>Cambian "ia", "remoto" y "mercado"</td></tr>
+  </table>
+  <p class="cierre">Cambió el tono y cambió de qué se habla. La IA para programar de 2025 pesa más en la conversación que el lanzamiento de ChatGPT.</p>
+  <p class="advertencia">Es correlación, no causalidad: el corte coincide con despidos tech, la suba de tasas en EE.UU. y la devaluación argentina de 2023.</p>
+  <span class="num"></span>
+  <aside class="notas">Resumen por hipótesis. Ninguna se cumple tal como la planteamos: el tono empeoró, pero empezó antes y no es propio de IT; los temas cambiaron, sobre todo hacia la IA, y en dos etapas; el vocabulario cambió para la IA y el trabajo remoto. Cierre: no podemos atribuir el cambio a ChatGPT, porque se superpone con otros factores. Gracias, preguntas.</aside>
+</section>
+
+</div></div>
+
+<div class="panel-notas" id="panelNotas"><small>Notas · tecla N para ocultar</small><div id="textoNotas"></div></div>
+<div class="ayuda">← → para avanzar · N notas · F pantalla completa · P todas</div>
+
+<script>
+  const diapos = [...document.querySelectorAll(".diapo")];
+  const lienzo = document.getElementById("lienzo");
+  const panel = document.getElementById("panelNotas");
+  const textoNotas = document.getElementById("textoNotas");
+  let actual = 0;
+
+  diapos.forEach((d, i) => { d.querySelector(".num").textContent = `${i + 1} / ${diapos.length}`; });
+
+  function escalar() {
+    const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    lienzo.style.transform = `scale(${s})`;
+  }
+
+  function mostrar(i) {
+    actual = Math.max(0, Math.min(diapos.length - 1, i));
+    diapos.forEach((d, j) => d.classList.toggle("activa", j === actual));
+    const nota = diapos[actual].querySelector(".notas");
+    textoNotas.textContent = nota ? nota.textContent : "";
+    history.replaceState(null, "", `#${actual + 1}`);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); mostrar(actual + 1); }
+    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); mostrar(actual - 1); }
+    else if (e.key === "Home") mostrar(0);
+    else if (e.key === "End") mostrar(diapos.length - 1);
+    else if (e.key.toLowerCase() === "n") panel.classList.toggle("visible");
+    else if (e.key.toLowerCase() === "f") {
+      if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+    }
+    else if (e.key.toLowerCase() === "p") document.body.classList.toggle("todas");
+  });
+  document.addEventListener("click", (e) => {
+    if (document.body.classList.contains("todas") || panel.contains(e.target)) return;
+    mostrar(e.clientX > window.innerWidth / 2 ? actual + 1 : actual - 1);
+  });
+  window.addEventListener("resize", escalar);
+
+  if (new URLSearchParams(location.search).has("todas")) document.body.classList.add("todas");
+  escalar();
+  mostrar((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
+</body>
+</html>
