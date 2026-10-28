@@ -58,12 +58,14 @@ def leer(path):
 
 def consolidar_reddit(salida):
     conteo = defaultdict(Counter)
-    vistos = set()  # (autor, hash del texto), para descartar repetidos
+    # (subreddit, tipo, autor, hash del texto): un texto repetido solo se descarta
+    # dentro del mismo sub y tipo, para no sacarle a un sub lo que se cruzó desde otro.
+    vistos = set()
 
-    def repetido(autor, texto):
+    def repetido(sub, tipo, autor, texto):
         if autor == "[deleted]":
             return False
-        clave = (autor, hashlib.md5(texto.encode("utf-8")).digest())
+        clave = (sub, tipo, autor, hashlib.md5(texto.encode("utf-8")).digest())
         if clave in vistos:
             return True
         vistos.add(clave)
@@ -88,7 +90,7 @@ def consolidar_reddit(salida):
                 if cuerpo in BORRADOS:
                     cuerpo = ""
                 texto = f"{titulo}\n\n{cuerpo}" if cuerpo else titulo
-                if repetido(d.get("author"), texto):
+                if repetido(sub, "post", d.get("author"), texto):
                     c["repetido"] += 1
                     continue
                 removido = bool(d.get("removed_by_category"))
@@ -117,7 +119,7 @@ def consolidar_reddit(salida):
                 if texto in BORRADOS:
                     c["borrado"] += 1
                     continue
-                if repetido(d.get("author"), texto):
+                if repetido(sub, "comentario", d.get("author"), texto):
                     c["repetido"] += 1
                     continue
                 post_id = (d.get("link_id") or "").removeprefix("t3_")

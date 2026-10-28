@@ -1,0 +1,51 @@
+entidad,etiqueta,posts_antes,posts_despues,tasa_antes,tasa_despues,log2_cambio,sentido
+chatgpt,MISC,0,417,0.00,5.21,5.22,crece
+claude,PER,0,296,0.00,3.70,4.73,crece
+carrefour,ORG,0,196,0.00,2.45,4.14,crece
+mcdonald's,MISC,0,141,0.00,1.76,3.66,crece
+coto,LOC,0,136,0.00,1.70,3.61,crece
+arca,ORG,0,130,0.00,1.62,3.55,crece
+mc,MISC,0,118,0.00,1.47,3.41,crece
+chatter,PER,0,114,0.00,1.42,3.36,crece
+gemini,MISC,0,111,0.00,1.39,3.32,crece
+acabo,MISC,0,109,0.00,1.36,3.29,crece
+ias,MISC,0,109,0.00,1.36,3.29,crece
+pcs,MISC,0,108,0.00,1.35,3.28,crece
+interpretia,LOC,0,101,0.00,1.26,3.18,crece
+ia,ORG,12,2512,3.35,31.38,3.17,crece
+claude code,PER,0,98,0.00,1.22,3.14,crece
+corpo,ORG,0,89,0.00,1.11,3.00,crece
+gano,PER,0,85,0.00,1.06,2.94,crece
+redes,MISC,0,82,0.00,1.02,2.88,crece
+reels,MISC,1,244,0.28,3.05,2.87,crece
+pagan,PER,0,81,0.00,1.01,2.87,crece
+feedback,ORG,0,80,0.00,1.00,2.85,crece
+pagos,MISC,0,78,0.00,0.97,2.81,crece
+tup,MISC,0,77,0.00,0.96,2.79,crece
+ee.uu,LOC,0,77,0.00,0.96,2.79,crece
+tecnicatura universitaria,LOC,0,74,0.00,0.92,2.74,crece
+alkemy,LOC,23,23,6.42,0.29,-4.48,cae
+reactjs,MISC,15,37,4.19,0.46,-3.21,cae
+se busca,LOC,12,31,3.35,0.39,-3.15,cae
+argentina programa,MISC,14,37,3.91,0.46,-3.11,cae
+deseable,MISC,11,34,3.07,0.42,-2.90,cae
+node js,MISC,8,26,2.23,0.32,-2.84,cae
+net core,MISC,7,23,1.95,0.29,-2.83,cae
+digital house,LOC,10,34,2.79,0.42,-2.77,cae
+cs50,MISC,7,25,1.95,0.31,-2.72,cae
+freecodecamp,ORG,18,63,5.03,0.79,-2.70,cae
+jquery,MISC,10,36,2.79,0.45,-2.68,cae
+educacionit,MISC,7,26,1.95,0.32,-2.66,cae
+coder,PER,14,52,3.91,0.65,-2.63,cae
+plus,MISC,7,27,1.95,0.34,-2.61,cae
+flask,MISC,14,53,3.91,0.66,-2.60,cae
+sass,MISC,12,46,3.35,0.57,-2.59,cae
+requerimientos,MISC,9,35,2.51,0.44,-2.58,cae
+programa,MISC,6,24,1.68,0.30,-2.57,cae
+ruby,MISC,12,47,3.35,0.59,-2.56,cae
+coder house,MISC,7,28,1.95,0.35,-2.56,cae
+saber,MISC,8,32,2.23,0.40,-2.55,cae
+illustrator,MISC,9,36,2.51,0.45,-2.54,cae
+uk,LOC,8,35,2.23,0.44,-2.42,cae
+repito,ORG,6,28,1.68,0.35,-2.35,cae
+full stack developer,MISC,7,33,1.95,0.41,-2.32,cae

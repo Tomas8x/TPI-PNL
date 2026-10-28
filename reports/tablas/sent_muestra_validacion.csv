@@ -1,0 +1,104 @@
+id,tipo,periodo,etiqueta,sent_neg,sent_neu,sent_pos,texto,etiqueta_manual
+ilx91o0,comentario,antes,NEG,0.7666006684303284,0.22793838381767273,0.005460990127176046,Y convengamos tambien que es un rol de contractor / empleado porque le piden trabajar full-time y la relacion es casi de dependencia porque no te da tiempo para otra cosa. Es decir un empleado pero sin cargos sociales... la empresa no le puede reclamar nada.,
+j4bddat,comentario,despues,NEG,0.7120305299758911,0.2789713442325592,0.008998222649097443,"Lo manejaría con oftalmología.
+
+Personalmente no me pasa pero es posible que estés forzando la vista para enfocar, calculo que si no usara los anteojos me pasaría lo mismo, ni te das cuenta y terminás el día con los ojos cansados. No sería descabellado pensar que necesités usar anteojos, sacá turno con algún oftalmólogo y que te revisen.",
+j6v8ntx,comentario,despues,NEG,0.6711485981941223,0.3176479637622833,0.011203398928046227,"Sigo sin entender porque la gente que estudia Ingenieria en sistemas piensa que es una carrera enfocada en programacion? En donde he trabajado, los juniors que entraban casi con el titulo en mano, sabian lo mismo de codigo que un tipo que le metia un par de meses autodidaca, muchos entraban como QA o en otras areas de IT porque ya ni idea de codigo tenias o no les gustaba no lo se.
+
+No es una carrera enfocada a programar. Si queres programar te vas a Ciencias de la computacion.",
+jk7vcjq,comentario,despues,NEG,0.8120266199111938,0.17599937319755554,0.011973983608186245,Pues arruinandola,
+jlpfd53,comentario,despues,NEG,0.7944139838218689,0.19949091970920563,0.006095114164054394,"> Hay varios lenguajes y herramientas que no tienen buen soporte en Windows, y si trabajas en desarrollo web todos los servers son Linux, terminas obligado a usar Docker a lo loco.
+
+*Ehhh, más o menos..* (leer con voz de chino cirujano)
+
+Yo empecé a usar Docker porque estoy laburando en una plataforma cuyo selling point #1 es que es open source y cloud-agnostic, la podés hostear en AWS, Azure, GCP, O en una compu que tengas en el sótano de la casa de tu vieja con la gotera cayéndole arriba del t",
+joez23y,comentario,despues,NEG,0.8024224638938904,0.19312137365341187,0.004456108435988426,"Siento que para el autodidacta después de front y back el mundo se acaba.
+
+El problema es creer que front termina en saber hacer un component y que el back (sobretodo) termina en saber hacer un get/post.",
+k6brnek,comentario,despues,NEG,0.7535776495933533,0.23793558776378632,0.008486732840538025,">Qué estudiar?
+
+Carrera de grado relacionada con IT, podés ir a la UTN que es gratis. 
+
+Ir por el camino de bootcamp, curso o autoformación está jodido porque el mercado está saturado de gente con ese perfil que no consigue trabajo, si agarras por ese lado tené en cuenta que muchas empresas están buscando solo postulantes con estudios universitarios.",
+kiysy3z,comentario,despues,NEG,0.6817238926887512,0.2968069016933441,0.021469147875905037,"A mi no me molesta, de hecho te sigo y me hace cagar de la risa. Pero tenes tu personaje en las redes y parte de ese personaje es tirar hate.   
+No me refiero a que VIVAS en el sentido de que es tu fuente de ingreso.",
+liwr7mk,comentario,despues,NEG,0.5549179315567017,0.4325927793979645,0.01248933281749487,"Si, ese mismo proyecto. todo lo de DevOps/SRE que te digan es un chamuyo",
+mkwg7bu,comentario,despues,NEG,0.6774942874908447,0.2246171087026596,0.09788867831230164,Hijos de perra,
+muka5kq,comentario,despues,NEG,0.6404452323913574,0.3396400213241577,0.019914746284484863,"Conocí al CEO antes de que se fuera becado a la universidad de la Nasa. Era un chantun, aunque pasado tanto tiempo es algo que no puedo afirmar hoy.
+Ahora, hace unos años le fui a pedir una mano y me sacó cagando. Te salve las papas con la tesis, ladrón!",
+n4las17,comentario,despues,NEG,0.8727561235427856,0.12444978207349777,0.002794115338474512,"¿Donde dice OP que es un contrato o prestar un servicio? Pareciera una Relación de Dependencia Encubierta, o sea, trabajo en negro.",
+ndaakzx,comentario,despues,NEG,0.6889883875846863,0.2938806116580963,0.017130980268120766,"No creas que esto es un velorio porque sí, la situacion esta complicada",
+nmx4kzq,comentario,despues,NEG,0.7128996849060059,0.2684149444103241,0.018685339018702507,"De hecho el punto en contra de mucha gente que están +3 años es que en meli se estancan pero la chapa y la guita a nivel nacional los tiene ahí.   
+  
+No todo es proyectos buenos  y buenos equipos.",
+noeqnlk,comentario,despues,NEG,0.7604988217353821,0.2333020567893982,0.006199100986123085,"A .net, Node al ser js está saturado de bootcampers por lo que la competencia es mucho mayor en el entry level.",
+o56xvcg,comentario,despues,NEG,0.8266044855117798,0.1628674566745758,0.010528070852160454,"Uf que dificil. Siento que si justo das la tecla entrando en un equipo chico con una iniciativa nueva, los integrantes con mayor impacto tienen que ir creciendo en seniority en conjunto con el producto, en definitiva van a ser los que mas expertise tienen con la solucion porque la conocen desde el inicio. Por otro lado vas a tener rezagados que solo hacen lo minimo necesario y esos no deberian crecer al mismo ritmo, por mas que despues necesites nuevo staff para ocupar posiciones con mayor senio",
+oemwr0q,comentario,despues,NEG,0.6495779752731323,0.15887533128261566,0.19154666364192963,Una bomba laburar con el seguro,
+of3hso4,comentario,despues,NEG,0.9031814336776733,0.09202324599027634,0.004795328248292208,"La mayoria de informacion tendria que venir formateada  ya del servidor , y en una pantalla por mas que sea un celular de ultima generacion va a ser poca informacion la que guardas. 
+
+Ninguna aplicacion de samsung te obliga a que no tengas rooteado para poder usarla.",
+oun6gin,comentario,despues,NEG,0.8155637979507446,0.1747066229581833,0.00972956046462059,Hay 4 devs. El de MERN es pobre. El devops 6K es gordo aunque sea flaco. El de Python es bruto. Y el de Java/C++ es muy gay.,
+pacqzdw,comentario,despues,NEG,0.9697785973548889,0.027794042602181435,0.00242743082344532,"si, bastante dudosas las afirmaciones, todo muy raro e inchequeable... sumado a la movida de la manada de mononeuronales que culpan a Galperin por cualquier cosa random y a la manquera de la gente en general a la hora de usar tecnología... desconfío fuerte de todas las afirmaciones",
+1dz2s19,post,despues,NEU,0.018453195691108704,0.7407183051109314,0.2408285290002823,"¿Bootcamps o Cursos de Udemy para Obtener Empleo Remoto en Programación?
+
+Estoy buscando obtener un empleo remoto en el área de programación y estoy considerando opciones para estudiar de manera intensiva durante 4 a 6 meses. Me gustaría saber sus opiniones y experiencias sobre qué opción consideran más conveniente: ¿Bootcamps o cursos en Udemy?
+
+Los bootcamps ofrecen una estructura intensiva y guiada, a menudo con proyectos prácticos y mentores disponibles. Por otro lado, los cursos en Udemy pe",
+1pye42h,post,despues,NEU,0.3380732536315918,0.6392052173614502,0.02272149920463562,Necesito ayuda:( con mi carrera redes y telecomunicaciones,
+1q600mm,post,despues,NEU,0.12463382631540298,0.8460184335708618,0.02934766747057438,"El Viejo: ""Quien de Ustedes Fue""?",
+1w8gymc,post,despues,NEU,0.027740368619561195,0.933101236820221,0.0391584150493145,Terminando Ciencias de la Computación y arranco Economía el año que viene. Tiene sentido para apuntar a data science en finanzas o roles quant remotos?,
+ikajoms,comentario,antes,NEU,0.24827319383621216,0.647202730178833,0.10452407598495483,Si pero no,
+il6qrvm,comentario,antes,NEU,0.11553570628166199,0.8549512624740601,0.029513079673051834,"ya no piden eso, en una epoca pedian ver los certificados de materias para verificar si estabas estudiando o tiraste fruta.",
+isp3jo6,comentario,antes,NEU,0.11005525290966034,0.5894590616226196,0.30048567056655884,XD,
+k1qqjuz,comentario,despues,NEU,0.05656769499182701,0.7862493395805359,0.1571829915046692,"no no, far from it. Conozco el entorno en donde me muevo y hasta ahi. Y me gusta mucho entender porque en algun momento se uso X tecnologia y despues vino otra que gano popularidad, etc.
+
+De .Net no tengo ni idea",
+k8acj70,comentario,despues,NEU,0.12757818400859833,0.8122463226318359,0.06017545983195305,En donde estas estudiando?,
+kqber9s,comentario,despues,NEU,0.40643078088760376,0.5639978051185608,0.02957141399383545,"En realidad, es depende la empresa. Te puede pasar en cualquier lado que te rasques y te paguen, o te exploten y no te den un peso por las horas extra que hagas. 
+
+
+Igual, hay que mantenerse en el medio, sin rascarse ni ser explotado. De las 8hs, trabajar de 4 a 6 es un buen número, si te pinchan para que estés las 8hs ""buscándote algo que hacer"", solo por el hecho de mantenerte ocupado, mejor raja para otro lado.",
+lhrrq6k,comentario,despues,NEU,0.07296569645404816,0.5661265254020691,0.36090773344039917,Hi! How r u??,
+mbsexvw,comentario,despues,NEU,0.07122816890478134,0.747305691242218,0.18146614730358124,"Yo en un principio ni sabia que la matemática y la programación estaban muy relacionadas ... De casualidad me gustó el plan de computación (porque no tenia administración ni legales ni quimica)
+
+Y en mi primera clase de algebra se sentó un flaco al lado mío que por cada teorema que el profesor explicaba el flaco lo relacionaba con bases de datos e ingeniería de software, me manijeo con sus factos, lo cagué a preguntas y ahí recién entendí un poquito más la correlación con el software.   
+  
+Me e",
+mm4xn27,comentario,despues,NEU,0.30513355135917664,0.5924206972122192,0.1024458259344101,sisi el nivel si siendo muy bueno! pero no es el mismo que antes de la pandemia,
+mq7naj9,comentario,despues,NEU,0.0650741457939148,0.905808687210083,0.029117172583937645,Entraste como SSR?,
+msiulsy,comentario,despues,NEU,0.42208200693130493,0.5572598576545715,0.02065814845263958,"nono en el puesto de programador solo llevo 1 año, pero estas en lo cierto que deberían pagar x lo que sabes",
+n4pxvfx,comentario,despues,NEU,0.11895288527011871,0.850141167640686,0.030905965715646744,networking le dicen y tenes o no tenes xD,
+oesxl4p,comentario,despues,NEU,0.12562525272369385,0.6894816160202026,0.18489311635494232,"Mi recomendación es que te enamores del problema y no de la solución (o sea, del proyecto). Tenés que hacer mucho discovery antes de crear un producto",
+ov0wztt,comentario,despues,NEU,0.2200251668691635,0.5056138038635254,0.2743610739707947,ajajajjajajajajja,
+p1kz8jx,comentario,despues,NEU,0.05818202719092369,0.8335434794425964,0.10827455669641495,Pasar a un modelo de suscripcion. Como hacen los gimnasios!!!,
+pbzc06m,comentario,despues,NEU,0.11031249165534973,0.7657204270362854,0.12396711856126785,"Sí, redifícil. Tardé 15 segundos [https://ar.linkedin.com/in/fernandeznad](https://ar.linkedin.com/in/fernandeznad) (ojo faltan 2 letras que me las guardo para preservar la privacidad de Nadia)",
+16wexhi,post,despues,POS,0.029893461614847183,0.40825730562210083,0.5618492364883423,"En que usan la plata?
+
+Buenas, como aprovechan la buena guita que ganan en el día a día, invierten en un negocio relacionado? construyen una casa? ahorran para un departamento? gastan en sus hobbies? mega ultra setup de laburo?",
+jhor9b2,comentario,despues,POS,0.006654615048319101,0.378911554813385,0.6144338250160217,"Tenés data específica para pasarme? no conocía eso. Me viene bien porque tengo mucha vocación docente, la verdad. En materia de inglés de hecho doy clase en una privada dando física, química y biología en inglés para los cursos de Cambridge y en la facultad doy particular de hasta materias de tercero, jajaja",
+jpussje,comentario,despues,POS,0.0026533419732004404,0.037815190851688385,0.9595313668251038,Excelente! Gracias por el dato nuevamente!,
+jzgdqpn,comentario,despues,POS,0.048789456486701965,0.3391623795032501,0.6120482087135315,lo mejor que podés hacer es tener más entrevistas hasta que le agarres la mano,
+kh8ebe9,comentario,despues,POS,0.007594538852572441,0.18372952938079834,0.8086759448051453,"en mi opinion, yo tenia setup! con todo, ahora solo un laptop, me gusta la independencia de llevarmela donde quiera, una mochila un mouse y listo.  
+eso si la note es de las mejores!!  y la pago por renting ni siquiera es mia!!",
+khyioa6,comentario,despues,POS,0.005133028142154217,0.1532667875289917,0.8416001796722412,"El nivel de matemática es muy bueno, pensá que también cursas con gente de la lic en matemática. Lo que si, hay que encontrarle el gusto porque la carrera tiene 7 materias de matemática.",
+khylbn9,comentario,despues,POS,0.021741827949881554,0.481964647769928,0.4962935745716095,Chrome cómo toda gente de bien,
+l9ee6s2,comentario,despues,POS,0.013635669834911823,0.05984111875295639,0.9265232682228088,Mac m1 pro una joyita,
+l9ols3i,comentario,despues,POS,0.0033337101340293884,0.027960555627942085,0.9687057137489319,"Hice .NET hace unos años ahí, muy buen lugar y profes me habían tocado",
+lbstocs,comentario,despues,POS,0.011544786393642426,0.24647708237171173,0.7419781684875488,"Las Raspberry se pusieron saladas. Yo tengo varias 3b que costaban 20 o 30 verdes en USA.  
+Estan buenisimas para jugar con IoT, automatización, making, etc.
+
+Pero para hostear algo, y jugar con VMs, Docker, K8s, lo ideal es cualquier PC vieja. Con un i5 4th para arriba y 8gb, ya podés meter mano en muchísimo software, y debería ser muy simple conseguir hardware así de viejo.",
+ljmx726,comentario,despues,POS,0.00624801917001605,0.07188110798597336,0.9218708276748657,"Platzi tiene contenido actualizado en lo más demandado del momento, tené en cuenta eso porque muchos de acá le tiran bosta pero hay gente que desde cero consiguió laburo con Platzi.
+
+
+Hay mucho y muy valioso, yo personalmente si lo recomiendo.",
+ljqauqo,comentario,despues,POS,0.007089158054441214,0.06803421676158905,0.9248766303062439,Muchas gracias por el consejo,
+lqxcbs2,comentario,despues,POS,0.0032294904813170433,0.028560137376189232,0.9682103991508484,"Gracias hermano, esa es buena data",
+mdvj36a,comentario,despues,POS,0.007719125598669052,0.05725330114364624,0.9350276589393616,Joya muchas gracias!,
+mr5naia,comentario,despues,POS,0.01599878817796707,0.12151619046926498,0.8624849319458008,Mas claro imposible mil gracias che,
+mu48e6a,comentario,despues,POS,0.03467361256480217,0.21669664978981018,0.7486297488212585,must be fun at parties,
+n0y44hy,comentario,despues,POS,0.002772317733615637,0.0198061466217041,0.9774215221405029,excelente inciativa. Muy chevere tu web app sencilla e intuitiva.,
+n1cbjmh,comentario,despues,POS,0.009080114774405956,0.36483538150787354,0.6260845065116882,"Mi estudio es mucho en lectura, tengo la rutina de antes de empezar a trabajar leo 30 min un libro tecnico, hay muchos buenisimos.  
+Despues el tema de proyectos en mi caso es muy varisble, a veces hay semanas que le pego todos los dias 2 horitas y otras donde directamente no toco side projects. Intento relajarme en el sentido de todos los dias hacer un poquito (leer) y con eso decir bueno hice algo, si tengo ganas hago mas, sino no.",
+ntc41vl,comentario,despues,POS,0.003345753299072385,0.037650495767593384,0.959003746509552,Eso sería una bonita historia para ser sincero y un buen gesto de tu parte,
+oys8a73,comentario,despues,POS,0.03326236829161644,0.29603031277656555,0.6707073450088501,"jajaja, todos pueden. Será más fácil o más difícil, pero se puede. Habría que ponerle un poco más de huevo nomás",

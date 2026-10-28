@@ -1,0 +1,13 @@
+subreddit,tipo,periodo,n_textos,n_hilos,pct_neg,pct_neg_ic,polaridad,polaridad_ic
+devsarg,post,antes,2096,2096,11.02,"(np.float64(9.64), np.float64(12.35))",-0.0433,"(np.float64(-0.0574), np.float64(-0.0287))"
+devsarg,post,despues,39716,39716,22.28,"(np.float64(21.87), np.float64(22.73))",-0.1536,"(np.float64(-0.1577), np.float64(-0.1496))"
+devsarg,comentario,antes,30749,1776,25.0,"(np.float64(23.94), np.float64(25.98))",-0.0746,"(np.float64(-0.0879), np.float64(-0.0613))"
+devsarg,comentario,despues,826703,33590,35.4,"(np.float64(35.11), np.float64(35.73))",-0.2129,"(np.float64(-0.2168), np.float64(-0.2096))"
+devsarg,todos,antes,32845,2107,24.1,"(np.float64(23.04), np.float64(25.2))",-0.0726,"(np.float64(-0.0847), np.float64(-0.0577))"
+devsarg,todos,despues,866419,40373,34.79,"(np.float64(34.5), np.float64(35.1))",-0.2102,"(np.float64(-0.2137), np.float64(-0.2069))"
+empleos_AR,post,antes,1486,1486,8.88,"(np.float64(7.42), np.float64(10.41))",-0.0118,"(np.float64(-0.026), np.float64(0.0031))"
+empleos_AR,post,despues,40332,40332,24.98,"(np.float64(24.6), np.float64(25.43))",-0.189,"(np.float64(-0.1929), np.float64(-0.1853))"
+empleos_AR,comentario,antes,17719,1194,24.19,"(np.float64(22.34), np.float64(26.57))",-0.0718,"(np.float64(-0.0976), np.float64(-0.0496))"
+empleos_AR,comentario,despues,628049,33015,35.98,"(np.float64(35.5), np.float64(36.42))",-0.2148,"(np.float64(-0.2204), np.float64(-0.21))"
+empleos_AR,todos,antes,19205,1514,23.0,"(np.float64(21.17), np.float64(25.23))",-0.0672,"(np.float64(-0.0911), np.float64(-0.0467))"
+empleos_AR,todos,despues,668381,40638,35.31,"(np.float64(34.86), np.float64(35.72))",-0.2133,"(np.float64(-0.2179), np.float64(-0.2086))"

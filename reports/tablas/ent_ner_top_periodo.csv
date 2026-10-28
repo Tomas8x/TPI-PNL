@@ -1,0 +1,61 @@
+periodo,rango,entidad,etiqueta,posts_antes,posts_despues,tasa_antes,tasa_despues,log2_cambio
+antes,1,argentina,LOC,213,4455,59.46,55.65,-0.10
+antes,2,javascript,MISC,203,1414,56.67,17.66,-1.68
+antes,3,python,MISC,184,2217,51.37,27.70,-0.89
+antes,4,java,MISC,147,1474,41.04,18.41,-1.16
+antes,5,css,MISC,132,906,36.85,11.32,-1.71
+antes,6,html,MISC,125,976,34.90,12.19,-1.52
+antes,7,it,ORG,111,1979,30.99,24.72,-0.33
+antes,8,react,MISC,98,897,27.36,11.21,-1.29
+antes,9,linkedin,ORG,94,2304,26.24,28.78,0.13
+antes,10,node,MISC,86,660,24.01,8.25,-1.55
+antes,11,sql,MISC,82,1183,22.89,14.78,-0.64
+antes,12,buenos aires,LOC,81,1853,22.61,23.15,0.03
+antes,13,utn,ORG,80,1030,22.33,12.87,-0.80
+antes,14,experiencia,MISC,73,515,20.38,6.43,-1.67
+antes,15,cv,ORG,70,3306,19.54,41.30,1.07
+antes,16,ahora,MISC,70,2022,19.54,25.26,0.36
+antes,17,estados unidos,LOC,68,1129,18.98,14.10,-0.44
+antes,18,estoy,MISC,68,2098,18.98,26.21,0.46
+antes,19,youtube,MISC,67,995,18.70,12.43,-0.60
+antes,20,php,MISC,66,563,18.43,7.03,-1.40
+antes,21,inglés,MISC,59,465,16.47,5.81,-1.51
+antes,22,pc,MISC,55,1381,15.35,17.25,0.16
+antes,23,aca,ORG,52,1297,14.52,16.20,0.15
+antes,24,uba,ORG,52,872,14.52,10.89,-0.43
+antes,25,mysql,MISC,49,344,13.68,4.30,-1.68
+antes,26,full stack,MISC,48,433,13.40,5.41,-1.32
+antes,27,acá,LOC,47,1068,13.12,13.34,0.01
+antes,28,requisitos,MISC,44,505,12.28,6.31,-0.98
+antes,29,google,ORG,42,809,11.73,10.11,-0.23
+antes,30,wordpress,MISC,42,358,11.73,4.47,-1.41
+despues,1,argentina,LOC,213,4455,59.46,55.65,-0.10
+despues,2,cv,ORG,70,3306,19.54,41.30,1.07
+despues,3,ia,ORG,12,2512,3.35,31.38,3.17
+despues,4,linkedin,ORG,94,2304,26.24,28.78,0.13
+despues,5,python,MISC,184,2217,51.37,27.70,-0.89
+despues,6,estoy,MISC,68,2098,18.98,26.21,0.46
+despues,7,ahora,MISC,70,2022,19.54,25.26,0.36
+despues,8,it,ORG,111,1979,30.99,24.72,-0.33
+despues,9,buenos aires,LOC,81,1853,22.61,23.15,0.03
+despues,10,java,MISC,147,1474,41.04,18.41,-1.16
+despues,11,javascript,MISC,203,1414,56.67,17.66,-1.68
+despues,12,pc,MISC,55,1381,15.35,17.25,0.16
+despues,13,aca,ORG,52,1297,14.52,16.20,0.15
+despues,14,necesito,ORG,41,1252,11.45,15.64,0.43
+despues,15,rrhh,LOC,19,1196,5.30,14.94,1.46
+despues,16,mercadolibre,LOC,33,1192,9.21,14.89,0.67
+despues,17,sql,MISC,82,1183,22.89,14.78,-0.64
+despues,18,laburo,PER,38,1132,10.61,14.14,0.40
+despues,19,estados unidos,LOC,68,1129,18.98,14.10,-0.44
+despues,20,acá,LOC,47,1068,13.12,13.34,0.01
+despues,21,la verdad,MISC,28,1045,7.82,13.05,0.72
+despues,22,utn,ORG,80,1030,22.33,12.87,-0.80
+despues,23,youtube,MISC,67,995,18.70,12.43,-0.60
+despues,24,html,MISC,125,976,34.90,12.19,-1.52
+despues,25,css,MISC,132,906,36.85,11.32,-1.71
+despues,26,react,MISC,98,897,27.36,11.21,-1.29
+despues,27,internet,MISC,38,889,10.61,11.11,0.05
+despues,28,quiero,MISC,27,874,7.54,10.92,0.51
+despues,29,uba,ORG,52,872,14.52,10.89,-0.43
+despues,30,ustedes,ORG,25,870,6.98,10.87,0.61

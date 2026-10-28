@@ -1,0 +1,69 @@
+actor,categoria,textos_antes,textos_despues,tasa_antes,tasa_despues,razon,log2_cambio
+MercadoLibre,empresa,576,12968,11.066,8.449,0.764,-0.390
+Google,empresa,619,11902,11.892,7.755,0.652,-0.618
+Globant,empresa,231,4310,4.438,2.808,0.633,-0.663
+Meta/Facebook,empresa,199,3813,3.823,2.484,0.650,-0.625
+Accenture,empresa,183,3006,3.516,1.959,0.557,-0.848
+Microsoft,empresa,127,2662,2.440,1.734,0.711,-0.498
+Twitter/X,empresa,124,2222,2.382,1.448,0.608,-0.724
+"Bancos AR (Galicia, Santander, BBVA)",empresa,58,2041,1.114,1.330,1.193,0.243
+Amazon,empresa,94,1950,1.806,1.271,0.704,-0.515
+Nvidia,empresa,35,1661,0.672,1.082,1.609,0.667
+Apple,empresa,35,1069,0.672,0.697,1.036,0.031
+Oracle,empresa,95,1040,1.825,0.678,0.371,-1.436
+IBM,empresa,74,949,1.422,0.618,0.435,-1.210
+Netflix,empresa,43,692,0.826,0.451,0.546,-0.889
+Ualá,empresa,39,681,0.749,0.444,0.592,-0.773
+"Big Four (Deloitte, PwC, KPMG)",empresa,21,643,0.403,0.419,1.038,0.022
+Naranja X,empresa,8,320,0.154,0.208,1.357,0.355
+EPAM,empresa,0,224,0.000,0.146,,3.929
+GlobalLogic,empresa,11,149,0.211,0.097,0.459,-1.182
+Softtek,empresa,4,100,0.077,0.065,0.848,-0.401
+Cognizant,empresa,7,85,0.134,0.055,0.412,-1.371
+NTT Data/Everis,empresa,2,81,0.038,0.053,1.373,0.145
+Despegar,empresa,3,68,0.058,0.044,0.769,-0.591
+Capgemini,empresa,1,50,0.019,0.033,1.696,0.191
+Tata/TCS,empresa,1,41,0.019,0.027,1.390,-0.092
+Endava,empresa,4,19,0.077,0.012,0.161,-2.767
+Encora/Nearsoft,empresa,0,13,0.000,0.008,,-0.127
+Wizeline,empresa,0,5,0.000,0.003,,-1.423
+IA/inteligencia artificial,ia_generico,227,41110,4.361,26.785,6.142,2.615
+LLM,ia_generico,0,2786,0.000,1.815,,7.562
+Vibe coding,ia_generico,0,2228,0.000,1.452,,7.240
+ChatGPT/OpenAI,ia_herramienta,0,10992,0.000,7.162,,9.542
+Claude,ia_herramienta,0,4903,0.000,3.195,,8.378
+Copilot,ia_herramienta,31,1713,0.596,1.116,1.874,0.883
+Otras IA,ia_herramienta,0,1598,0.000,1.041,,6.760
+Cursor,ia_herramienta,8,1375,0.154,0.896,5.829,2.456
+Gemini/Bard,ia_herramienta,0,1347,0.000,0.878,,6.514
+DeepSeek,ia_herramienta,0,416,0.000,0.271,,4.820
+LinkedIn,plataforma,1423,24943,27.339,16.252,0.594,-0.751
+Bumeran/ZonaJobs/Computrabajo,plataforma,134,4844,2.574,3.156,1.226,0.289
+Upwork,plataforma,70,1561,1.345,1.017,0.756,-0.413
+Payoneer,plataforma,174,1075,3.343,0.700,0.210,-2.258
+Glassdoor,plataforma,90,1037,1.729,0.676,0.391,-1.363
+Indeed,plataforma,38,999,0.730,0.651,0.892,-0.184
+Workana,plataforma,37,699,0.711,0.455,0.641,-0.661
+Deel,plataforma,36,677,0.692,0.441,0.638,-0.668
+GetOnBoard,plataforma,7,58,0.134,0.038,0.281,-1.919
+Toptal,plataforma,15,58,0.288,0.038,0.131,-2.966
+Java,tecnologia,1351,14157,25.956,9.224,0.355,-1.493
+Python,tecnologia,1090,12685,20.941,8.265,0.395,-1.342
+JavaScript,tecnologia,1449,11598,27.839,7.557,0.271,-1.882
+.NET/C#,tecnologia,789,10347,15.159,6.742,0.445,-1.170
+React,tecnologia,972,9397,18.674,6.123,0.328,-1.610
+SQL,tecnologia,622,8624,11.950,5.619,0.470,-1.090
+AWS,tecnologia,260,5549,4.995,3.615,0.724,-0.469
+Node,tecnologia,592,4910,11.374,3.199,0.281,-1.831
+PHP,tecnologia,346,4705,6.647,3.066,0.461,-1.119
+Docker/Kubernetes,tecnologia,261,3984,5.014,2.596,0.518,-0.952
+Angular,tecnologia,308,3073,5.917,2.002,0.338,-1.565
+Azure,tecnologia,99,2377,1.902,1.549,0.814,-0.303
+SAP,tecnologia,110,2222,2.113,1.448,0.685,-0.552
+TypeScript,tecnologia,131,2162,2.517,1.409,0.560,-0.842
+COBOL,tecnologia,101,2005,1.940,1.306,0.673,-0.578
+Rust,tecnologia,74,1634,1.422,1.065,0.749,-0.427
+Kotlin,tecnologia,165,1423,3.170,0.927,0.292,-1.777
+Salesforce,tecnologia,160,1034,3.074,0.674,0.219,-2.194
+Flutter,tecnologia,55,976,1.057,0.636,0.602,-0.745
+Go,tecnologia,54,616,1.037,0.401,0.387,-1.382

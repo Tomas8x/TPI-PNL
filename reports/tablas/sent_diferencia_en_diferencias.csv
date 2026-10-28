@@ -1,0 +1,4 @@
+tipo,cambio_devsarg_pp,cambio_devsarg_ic,cambio_empleos_pp,cambio_empleos_ic,dif_en_dif_pp,dif_en_dif_ic
+post,11.26,"(np.float64(9.88), np.float64(12.7))",16.1,"(np.float64(14.51), np.float64(17.65))",-4.84,"(np.float64(-6.83), np.float64(-2.69))"
+comentario,10.4,"(np.float64(9.36), np.float64(11.55))",11.79,"(np.float64(9.48), np.float64(13.65))",-1.39,"(np.float64(-3.41), np.float64(1.4))"
+todos,10.69,"(np.float64(9.51), np.float64(11.77))",12.31,"(np.float64(10.07), np.float64(14.17))",-1.62,"(np.float64(-3.79), np.float64(0.83))"
