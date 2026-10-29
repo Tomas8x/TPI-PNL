@@ -44,7 +44,9 @@ python -m venv .venv
 .venv/Scripts/python -m spacy download es_core_news_lg
 ```
 
-Descargas (horas, ver `docs/02_scraping.md`). Cada descarga reanuda desde el último registro guardado, así que se puede cortar y volver a correr:
+Para no repetir las descargas, bajar el zip con todos los datos (1,1 GB) de la [release del 28/10/2026](https://github.com/Tomas8x/TPI-PNL/releases/tag/datos-2026-10-28) y descomprimirlo en la raíz del repo: crea `data/raw/` y `data/processed/`. Con eso se pueden correr directamente los scripts de análisis.
+
+Descargas desde cero (horas, ver `docs/02_scraping.md`). Cada descarga reanuda desde el último registro guardado, así que se puede cortar y volver a correr:
 
 ```bash
 .venv/Scripts/python scripts/correr_descargas.py      # Reddit, Hacker News "who wants to be hired", Djinni
