@@ -4,137 +4,161 @@
 <meta charset="utf-8">
 <title>¿Cambió la conversación sobre trabajo IT desde ChatGPT?</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Fuente: presentacion/plantilla.html. Generado con scripts/armar_presentacion.py: no editar presentacion.html a mano. -->
 <style>
   :root {
-    --superficie: #fcfcfb;
-    --plano: #f3f2ee;
-    --tinta: #0b0b0b;
-    --tinta-2: #52514e;
+    --fondo: #1a1a19;
+    --plano: #0d0d0d;
+    --tarjeta: #232322;
+    --tinta: #f0efec;
+    --tinta-2: #c3c2b7;
     --tenue: #898781;
-    --borde: #e1e0d9;
-    --oscuro: #121417;
-    --oscuro-2: #1d2026;
-    --tinta-osc: #f0efec;
-    --tinta-osc-2: #b9b8b0;
-    --azul: #2a78d6;
-    --azul-osc: #6aa4ec;
-    --rojo: #d03b3b;
-    --ambar: #b86e00;
-    --verde: #0a7d0a;
+    --grilla: #2c2c2a;
+    --eje: #383835;
+    --devsarg: #3987e5;
+    --empleos: #d95926;
+    --taqueros: #199e70;
+    --amarillo: #c98500;
+    --magenta: #d55181;
+    --violeta: #9085e9;
+    --verde: #2f9e2f;
     --fuente: "Segoe UI", system-ui, -apple-system, sans-serif;
+    --t: 1;
   }
+  @media (prefers-reduced-motion: reduce) { :root { --t: 0; } }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: #2a2b2e; font-family: var(--fuente); }
+  html, body { margin: 0; background: var(--plano); font-family: var(--fuente); color: var(--tinta); }
   body { overflow: hidden; }
-
-  /* Lienzo fijo de 1280 x 720 que se escala a la ventana */
   .escenario { position: fixed; inset: 0; display: grid; place-items: center; }
-  .lienzo { width: 1280px; height: 720px; position: relative; transform-origin: center center; }
-  .diapo {
-    position: absolute; inset: 0; padding: 56px 72px 48px;
-    background: var(--superficie); color: var(--tinta);
-    display: none; flex-direction: column;
-  }
-  .diapo.activa { display: flex; }
-  .diapo.oscura { background: var(--oscuro); color: var(--tinta-osc); }
+  .lienzo { width: 1280px; height: 720px; position: relative; transform-origin: center center; overflow: hidden; background: var(--fondo); }
+  .diapo { position: absolute; inset: 0; padding: 64px 80px 56px; display: none; flex-direction: column; }
+  .diapo.activa { display: flex; animation: entrar calc(.45s * var(--t)) ease both; }
+  @keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-  .kicker { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); font-weight: 600; margin: 0 0 14px; }
-  .oscura .kicker { color: var(--tinta-osc-2); }
-  h1 { font-size: 40px; line-height: 1.12; margin: 0; font-weight: 700; letter-spacing: -.01em; max-width: 1080px; }
-  h2 { font-size: 34px; line-height: 1.15; margin: 0 0 26px; font-weight: 700; letter-spacing: -.01em; max-width: 1120px; }
+  .kicker { font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--tenue); font-weight: 600; margin: 0 0 14px; }
+  h1 { font-size: 64px; line-height: 1.06; margin: 0; font-weight: 700; letter-spacing: -.02em; }
+  h2 { font-size: 40px; line-height: 1.12; margin: 0 0 8px; font-weight: 700; letter-spacing: -.015em; max-width: 1100px; }
+  .bajada { font-size: 22px; color: var(--tinta-2); line-height: 1.4; margin: 0; max-width: 980px; }
   p { margin: 0; }
+  .num { position: absolute; right: 36px; bottom: 22px; font-size: 13px; color: var(--tenue); font-variant-numeric: tabular-nums; }
+  .pie { position: absolute; left: 80px; bottom: 24px; font-size: 13px; color: var(--tenue); max-width: 1000px; }
 
-  .num { position: absolute; right: 72px; bottom: 22px; font-size: 13px; color: var(--tenue); font-variant-numeric: tabular-nums; }
-  .oscura .num { color: var(--tinta-osc-2); }
-  .fuente { position: absolute; left: 72px; bottom: 22px; font-size: 12px; color: var(--tenue); max-width: 1000px; }
+  /* Pasos dentro de una diapositiva */
+  [data-paso] { opacity: 0; transform: translateY(12px); transition: opacity calc(.5s * var(--t)) ease, transform calc(.5s * var(--t)) ease; }
+  [data-paso].visible { opacity: 1; transform: none; }
+  [data-ocultar].oculto { display: none; }
+  .apila { display: grid; }
+  .apila > * { grid-area: 1 / 1; }
 
-  /* Figura + columna de cifras */
-  .cuerpo { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 36px; min-height: 0; }
-  .figura { min-height: 0; display: flex; align-items: center; justify-content: center; }
-  .figura img { max-width: 100%; max-height: 100%; display: block; }
-  .cifras { display: flex; flex-direction: column; gap: 22px; justify-content: center; }
-  .cifra .valor { font-size: 44px; font-weight: 700; line-height: 1; letter-spacing: -.02em; color: var(--tinta); }
-  .cifra .valor.chico { font-size: 34px; }
-  .cifra .etiqueta { font-size: 15px; line-height: 1.35; color: var(--tinta-2); margin-top: 6px; }
+  /* Cifras grandes */
+  .cifra-grande { font-size: 132px; font-weight: 700; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .cifra-media { font-size: 72px; font-weight: 700; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .etiqueta { font-size: 20px; color: var(--tinta-2); margin-top: 12px; line-height: 1.35; }
+  .centro { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  /* Gráficos */
+  .grafico { flex: 1; min-height: 0; margin-top: 18px; position: relative; }
+  .grafico svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  svg text { font-family: var(--fuente); }
+  .eje-txt { fill: var(--tenue); font-size: 15px; }
+  .rotulo { font-size: 17px; font-weight: 600; }
+  .anotacion { font-size: 19px; font-weight: 700; fill: var(--tinta); }
+  .serie { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  .apagada { opacity: .25; transition: opacity calc(.6s * var(--t)); }
+  .tooltip rect { fill: #0d0d0d; stroke: var(--eje); }
+  .tooltip text { font-size: 15px; fill: var(--tinta); }
+  .leyenda { display: flex; gap: 22px; font-size: 16px; color: var(--tinta-2); margin-top: 10px; }
+  .leyenda span { display: inline-flex; align-items: center; gap: 8px; }
+  .leyenda i { width: 22px; height: 4px; border-radius: 2px; display: inline-block; }
 
   /* Portada */
   .portada { justify-content: center; }
-  .portada h1 { font-size: 58px; max-width: 1000px; }
-  .portada .bajada { font-size: 24px; color: var(--tinta-osc-2); margin-top: 22px; max-width: 900px; line-height: 1.35; }
-  .portada .pie { position: absolute; left: 72px; bottom: 48px; font-size: 16px; color: var(--tinta-osc-2); }
-  .portada .marca { position: absolute; right: 72px; top: 56px; width: 260px; height: 140px; }
+  .portada .fondo-svg { position: absolute; inset: 0; opacity: .5; }
+  .portada .contenido { position: relative; max-width: 1000px; }
+  .portada .grupo { position: absolute; left: 80px; bottom: 56px; font-size: 17px; color: var(--tinta-2); }
 
   /* Corpus */
-  .grilla { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-  .tarjeta { background: var(--plano); border-radius: 12px; padding: 18px 20px 16px; }
-  .tarjeta .valor { font-size: 46px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
-  .tarjeta .etiqueta { font-size: 15px; color: var(--tinta-2); margin-top: 10px; line-height: 1.4; }
-  .subs { list-style: none; padding: 0; margin: 10px 0 0; font-size: 15px; line-height: 1.55; color: var(--tinta-2); }
-  .subs b { color: var(--tinta); font-weight: 600; }
-  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; }
-  .caja { border: 1px solid var(--borde); border-radius: 12px; padding: 16px 22px; }
-  .caja h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); margin: 0 0 12px; font-weight: 600; }
-  .caja p, .caja li { font-size: 17px; line-height: 1.45; }
-  .caja ul { margin: 0; padding-left: 20px; }
-  .aviso { margin-top: 18px; font-size: 17px; color: var(--tinta-2); }
-  .aviso b { color: var(--tinta); }
-  .linea-tiempo { margin-top: 16px; }
-  .linea-tiempo h3 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); margin: 0 0 4px; font-weight: 600; }
-  .linea-tiempo svg { display: block; width: 100%; height: 96px; overflow: visible; }
-  .linea-tiempo text { font-family: var(--fuente); font-size: 13px; fill: var(--tinta-2); }
-  .linea-tiempo .anio { fill: var(--tenue); font-size: 12px; }
-  .linea-tiempo .clave { fill: var(--tinta); font-weight: 700; }
+  .subs { display: flex; gap: 16px; margin-top: 40px; }
+  .sub { background: var(--tarjeta); border-radius: 14px; padding: 18px 22px; min-width: 300px; }
+  .sub b { display: block; font-size: 22px; }
+  .sub span { font-size: 16px; color: var(--tinta-2); }
+  .sub i { display: inline-block; width: 10px; height: 10px; border-radius: 99px; margin-right: 8px; }
+
+  /* Método */
+  .tecnicas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 56px; }
+  .tecnica { background: var(--tarjeta); border-radius: 16px; padding: 28px 24px 26px; }
+  .tecnica svg { width: 44px; height: 44px; margin-bottom: 18px; }
+  .tecnica b { display: block; font-size: 24px; margin-bottom: 8px; }
+  .tecnica span { font-size: 17px; color: var(--tinta-2); line-height: 1.4; }
+
+  /* Línea de tiempo */
+  .tiempo { flex: 1; position: relative; margin-top: 30px; }
+
+  /* Emociones */
+  .emociones { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .emocion .nombre { font-size: 26px; font-weight: 600; color: var(--tinta-2); margin-bottom: 18px; }
+  .emocion .barras { display: flex; flex-direction: column; gap: 14px; margin-top: 26px; }
+  .barra { display: grid; grid-template-columns: 70px 1fr 90px; align-items: center; gap: 14px; font-size: 18px; color: var(--tinta-2); }
+  .barra .riel { height: 26px; background: var(--grilla); border-radius: 6px; overflow: hidden; }
+  .barra .llenado { height: 100%; width: 0; border-radius: 6px; transition: width calc(1.2s * var(--t)) cubic-bezier(.2,.7,.2,1); }
+  .barra b { color: var(--tinta); font-variant-numeric: tabular-nums; text-align: right; }
 
   /* Vocabulario */
-  .vocab { flex: 1; min-height: 0; margin-bottom: 18px; display: grid; grid-template-columns: 1fr 1fr 300px; gap: 28px; }
-  .palabra { border: 1px solid var(--borde); border-radius: 12px; padding: 40px 24px 20px; display: flex; flex-direction: column; }
-  .palabra .termino { font-size: 36px; font-weight: 700; margin-bottom: 10px; }
-  .palabra .termino span { font-size: 15px; font-weight: 500; color: var(--tinta-2); margin-left: 8px; }
-  .periodo { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); font-weight: 600; margin: 6px 0 10px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-  .chip { font-size: 18px; padding: 5px 13px; border-radius: 999px; background: var(--plano); color: var(--tinta); }
-  .chip.nuevo { background: #dce9fa; }
-  .nota-chip { font-size: 15px; color: var(--tinta-2); margin-top: 6px; }
-  .muestra-chip { display: inline-block; width: 12px; height: 12px; border-radius: 999px; background: #dce9fa; vertical-align: -1px; margin-right: 4px; }
+  .palabras { display: flex; gap: 10px; margin-top: 22px; }
+  .palabras button {
+    font: 600 20px var(--fuente); color: var(--tinta-2); background: var(--tarjeta); border: 1px solid var(--eje);
+    border-radius: 999px; padding: 8px 20px; cursor: pointer;
+  }
+  .palabras button[aria-pressed="true"] { background: var(--tinta); color: var(--fondo); border-color: var(--tinta); }
+  .vecinos { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 30px; }
+  .periodo-titulo { font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--tenue); font-weight: 600; margin-bottom: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; }
+  .chip { font-size: 24px; padding: 8px 18px; border-radius: 999px; background: var(--tarjeta); color: var(--tinta-2);
+          opacity: 0; transform: scale(.8); transition: opacity calc(.35s * var(--t)), transform calc(.35s * var(--t)); }
+  .chip.on { opacity: 1; transform: none; }
+  .chip.nuevo { background: #1f3a5c; color: #dbe9fb; }
+  .medidor { display: flex; gap: 40px; align-items: flex-end; margin-top: 6px; }
+  .medidor .valor { font-size: 52px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+  .medidor .etq { font-size: 16px; color: var(--tinta-2); margin-top: 6px; max-width: 260px; }
+  .veredicto { font-size: 18px; font-weight: 600; padding: 6px 14px; border-radius: 999px; display: inline-block; }
+  .veredicto.si { background: #1f3a5c; color: #dbe9fb; }
+  .veredicto.no { background: var(--tarjeta); color: var(--tinta-2); }
 
   /* Conclusión */
-  .tabla-hip { width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 4px; }
-  .tabla-hip td { padding: 13px 14px; border-bottom: 1px solid #2f333b; vertical-align: top; line-height: 1.35; }
-  .tabla-hip td:first-child { width: 380px; color: var(--tinta-osc); font-weight: 600; }
-  .tabla-hip td:nth-child(2) { width: 150px; white-space: nowrap; }
-  .tabla-hip td:last-child { color: var(--tinta-osc-2); }
-  .estado { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  .hipotesis { display: grid; gap: 12px; margin-top: 30px; }
+  .hip { display: grid; grid-template-columns: 70px 1fr 160px; align-items: center; gap: 22px; background: var(--tarjeta); border-radius: 14px; padding: 16px 24px; }
+  .hip .letra { font-size: 30px; font-weight: 700; color: var(--tenue); }
+  .hip b { font-size: 22px; display: block; }
+  .hip span { font-size: 17px; color: var(--tinta-2); }
+  .estado { font-size: 16px; font-weight: 700; padding: 6px 12px; border-radius: 999px; text-align: center; }
   .estado.parcial { background: #3a2f12; color: #fab219; }
   .estado.no { background: #3a1a1a; color: #f08a8a; }
-  .cierre { margin-top: 24px; font-size: 22px; line-height: 1.4; color: var(--tinta-osc); max-width: 1100px; }
-  .cierre b { color: #fff; }
-  .advertencia { margin-top: 12px; font-size: 15px; color: var(--tinta-osc-2); }
 
-  /* Notas del orador (tecla N) */
+  .cierre h1 { font-size: 72px; max-width: 1080px; }
+
   .notas { display: none; }
-  .panel-notas {
-    position: fixed; left: 0; right: 0; bottom: 0; max-height: 34%; overflow: auto;
-    background: rgba(18, 20, 23, .96); color: #f0efec; font-size: 17px; line-height: 1.5;
-    padding: 16px 28px 20px; display: none; border-top: 1px solid #3a3d44;
-  }
+  /* Notas y ayuda */
+  .panel-notas { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36%; overflow: auto; background: rgba(13,13,13,.97);
+    color: var(--tinta); font-size: 18px; line-height: 1.5; padding: 16px 28px 20px; display: none; border-top: 1px solid var(--eje); z-index: 5; }
   .panel-notas.visible { display: block; }
-  .panel-notas small { color: #b9b8b0; display: block; margin-bottom: 6px; }
-  .ayuda { position: fixed; right: 14px; top: 10px; font-size: 12px; color: #9a9890; opacity: .0; transition: opacity .3s; }
+  .panel-notas small { color: var(--tenue); display: block; margin-bottom: 6px; }
+  .ayuda { position: fixed; right: 14px; top: 10px; font-size: 12px; color: var(--tenue); opacity: 0; transition: opacity .3s; z-index: 4; }
   body:hover .ayuda { opacity: .9; }
+  .avance { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--eje); transition: width calc(.4s * var(--t)); }
 
-  /* Vista con todas las diapositivas (impresión a PDF o revisión) */
-  body.todas { overflow: auto; background: #2a2b2e; }
+  /* Todas las diapositivas (P) e impresión */
+  body.todas { overflow: auto; }
   body.todas .escenario { position: static; display: block; padding: 24px 0; }
-  body.todas .lienzo { transform: none !important; height: auto; margin: 0 auto; width: 1280px; }
-  body.todas .diapo { position: relative; display: flex; height: 720px; margin-bottom: 24px; }
-  body.todas .ayuda, body.todas .panel-notas { display: none !important; }
+  body.todas .lienzo { transform: none !important; height: auto; margin: 0 auto; background: none; overflow: visible; }
+  body.todas .diapo { position: relative; display: flex; height: 720px; margin-bottom: 24px; background: var(--fondo); animation: none; }
+  body.todas .ayuda, body.todas .panel-notas, body.todas .avance { display: none !important; }
   @media print {
     @page { size: 1280px 720px; margin: 0; }
-    body { background: none; overflow: visible; }
+    body { overflow: visible; }
     .escenario { position: static; display: block; }
-    .lienzo { transform: none !important; height: auto; }
+    .lienzo { transform: none !important; height: auto; overflow: visible; }
     .diapo { position: relative; display: flex !important; height: 720px; break-after: page; }
-    .ayuda, .panel-notas { display: none !important; }
+    .ayuda, .panel-notas, .avance { display: none !important; }
   }
 </style>
 </head>
@@ -142,230 +166,743 @@
 <div class="escenario"><div class="lienzo" id="lienzo">
 
 <!-- 1. Portada -->
-<section class="diapo oscura portada">
-  <svg class="marca" viewBox="0 0 260 140" aria-hidden="true">
-    <polyline fill="none" stroke="#6aa4ec" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
-      points="6,124 34,116 62,104 90,88 118,62 146,46 174,40 202,38 230,34 254,30"/>
-    <line x1="132" y1="6" x2="132" y2="134" stroke="#b9b8b0" stroke-width="2" stroke-dasharray="6 5"/>
-  </svg>
-  <p class="kicker">TPI · Procesamiento del Lenguaje Natural · UGR</p>
-  <h1>¿Cambió la conversación sobre trabajo IT desde ChatGPT?</h1>
-  <p class="bajada">Tono, temas y vocabulario en 1,9 millones de textos de Reddit, de 2021 a 2026, comparados con las ofertas de trabajo.</p>
-  <p class="pie">Grupo DIS-A-CLCD · Noviembre de 2026</p>
-  <span class="num"></span>
+<section class="diapo portada" data-escena="portada">
+  <svg class="fondo-svg" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <div class="contenido">
+    <p class="kicker">TPI · Procesamiento del Lenguaje Natural · UGR</p>
+    <h1>¿Cambió la conversación sobre trabajo IT desde que llegó ChatGPT?</h1>
+    <p class="bajada" style="margin-top:24px">Lo que dicen 1,9 millones de textos de Reddit entre 2021 y 2026</p>
+  </div>
+  <p class="grupo">Grupo DIS-A-CLCD · Noviembre de 2026</p>
   <aside class="notas">Presentarnos. La pregunta es si la llegada de ChatGPT, el 30 de noviembre de 2022, cambió cómo se habla del trabajo IT en Reddit. Spoiler: cambió, pero no cuando esperábamos.</aside>
 </section>
 
 <!-- 2. Corpus -->
 <section class="diapo">
-  <p class="kicker">Corpus y método</p>
-  <h2>Qué analizamos</h2>
-  <div class="grilla">
-    <div class="tarjeta"><div class="valor">1,9 M</div><div class="etiqueta">posts y comentarios de Reddit (Arctic Shift), de enero de 2021 a septiembre de 2026</div></div>
-    <div class="tarjeta"><div class="valor">3</div>
-      <ul class="subs"><li><b>r/devsarg</b>, programadores AR</li><li><b>r/empleos_AR</b>, trabajo en general</li><li><b>r/taquerosprogramadores</b>, México</li></ul></div>
-    <div class="tarjeta"><div class="valor">93 mil</div><div class="etiqueta">avisos de Hacker News "Who is hiring?", más las series de Indeed (EE.UU.) y SIPA (Argentina)</div></div>
-    <div class="tarjeta"><div class="valor">30/11/22</div><div class="etiqueta">corte: lanzamiento de ChatGPT. Comparamos antes y después</div></div>
-  </div>
-  <div class="fila">
-    <div class="caja"><h3>Técnicas</h3>
-      <ul>
-        <li>Sentimiento y emociones con RoBERTuito (pysentimiento)</li>
-        <li>Temas: diccionarios, TF-IDF y BERTopic</li>
-        <li>Vocabulario: word2vec antes y después del corte</li>
-        <li>Actores: entidades nombradas (spaCy) y diccionario de herramientas de IA</li>
-      </ul></div>
-    <div class="caja"><h3>Cuidado con el volumen</h3>
-      <p>Antes del corte hay solo el <b>5%</b> de los textos: r/devsarg pasó de ~80 posts por trimestre en 2021 a más de 2.500. Por eso comparamos <b>proporciones por mes o trimestre</b>, nunca cantidades.</p></div>
-  </div>
-  <div class="linea-tiempo">
-    <h3>Lo que pasó alrededor del corte</h3>
-    <svg viewBox="0 0 1136 96" role="img" aria-label="Línea de tiempo 2021 a 2026: Copilot, suba de tasas de la Fed, ChatGPT, despidos tech, GPT-4, devaluación, Claude 3 y fin del cepo">
-      <line x1="20" y1="48" x2="1116" y2="48" stroke="#c3c2b7" stroke-width="2"/>
-      <line x1="20" y1="44" x2="20" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="20" y="92" text-anchor="middle">2021</text>
-      <line x1="211" y1="44" x2="211" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="211" y="92" text-anchor="middle">2022</text>
-      <line x1="401" y1="44" x2="401" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="401" y="92" text-anchor="middle">2023</text>
-      <line x1="592" y1="44" x2="592" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="592" y="92" text-anchor="middle">2024</text>
-      <line x1="783" y1="44" x2="783" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="783" y="92" text-anchor="middle">2025</text>
-      <line x1="973" y1="44" x2="973" y2="52" stroke="#c3c2b7" stroke-width="2"/><text class="anio" x="973" y="92" text-anchor="middle">2026</text>
-      <circle cx="113" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="113" y="30" text-anchor="middle">Copilot (preview)</text>
-      <circle cx="249" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="249" y="72" text-anchor="middle">Suba de tasas Fed</text>
-      <circle cx="384" cy="48" r="7" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="2"/><text class="clave" x="384" y="30" text-anchor="middle">ChatGPT</text>
-      <circle cx="411" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="411" y="72" text-anchor="middle">Despidos Google y Microsoft</text>
-      <circle cx="439" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="439" y="30" text-anchor="middle">GPT-4</text>
-      <circle cx="582" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="582" y="72" text-anchor="middle">Devaluación 54%</text>
-      <circle cx="625" cy="48" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/><text x="625" y="30" text-anchor="middle">Claude 3</text>
-      <circle cx="837" cy="48" r="5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/><text x="837" y="72" text-anchor="middle">Fin del cepo</text>
-    </svg>
-  </div>
-  <span class="num"></span>
-  <aside class="notas">Tres comunidades: r/devsarg es el núcleo; r/empleos_AR es el control de "trabajo en general en Argentina"; r/taquerosprogramadores es el control de otro país, pero recién tiene datos desde mediados de 2023. Del lado del mercado, avisos con texto de Hacker News y dos series numéricas. Lo más importante del método: como los subs crecieron muchísimo, todo se mide en proporciones.</aside>
-</section>
-
-<!-- 3. Tono -->
-<section class="diapo">
-  <p class="kicker">Hipótesis A · Tono</p>
-  <h2>La conversación se volvió más negativa, pero empezó antes de ChatGPT</h2>
-  <div class="cuerpo">
-    <div class="figura"><img src="../reports/figures/pres_tono_mensual.png" alt="Porcentaje de textos negativos por mes en r/devsarg y r/empleos_AR, de 2021 a 2026, con la tendencia de r/devsarg. Sube 0,76 puntos por mes antes del corte y 0,17 después."></div>
-    <div class="cifras">
-      <div class="cifra"><div class="valor">17% a 37%</div><div class="etiqueta">textos negativos en r/devsarg, de 2021 a 2026</div></div>
-      <div class="cifra"><div class="valor chico">+2,5 pts</div><div class="etiqueta">salto en diciembre de 2022 (IC 0,8 a 4,2), chico al lado de la tendencia previa</div></div>
-      <div class="cifra"><div class="valor chico">82%</div><div class="etiqueta">coincidencia del clasificador con una revisión manual de 60 textos</div></div>
+  <p class="kicker">El corpus</p>
+  <div class="centro">
+    <div class="cifra-grande contador" data-hasta="__TOTAL__" data-formato="miles">0</div>
+    <p class="etiqueta">posts y comentarios de Reddit, de enero de 2021 a septiembre de 2026</p>
+    <div class="subs">
+      <div class="sub" data-paso="1"><b><i style="background:var(--devsarg)"></i>r/devsarg</b><span>programadores argentinos</span></div>
+      <div class="sub" data-paso="1"><b><i style="background:var(--empleos)"></i>r/empleos_AR</b><span>trabajo en general, Argentina</span></div>
+      <div class="sub" data-paso="1"><b><i style="background:var(--taqueros)"></i>r/taquerosprogramadores</b><span>programadores mexicanos</span></div>
     </div>
   </div>
-  <span class="fuente">Clasificador RoBERTuito (pysentimiento) sobre los 1,9 millones de textos. Regresión segmentada con errores HAC.</span>
-  <span class="num"></span>
-  <aside class="notas">Clasificamos los 1,9 millones de textos. La negatividad sube mucho, pero la mitad de la subida ocurre antes de ChatGPT: durante 2021 y 2022 crecía casi un punto por mes. Después del corte sigue subiendo, pero cuatro veces más lento. ChatGPT coincide con el final de la subida, no con el comienzo.</aside>
+  <p class="pie">Datos: Arctic Shift, archivo público de Reddit. Más 93 mil avisos de Hacker News y series de Indeed y SIPA.</p>
+  <aside class="notas">Bajamos todo lo que se publicó en tres comunidades. r/devsarg es el núcleo. r/empleos_AR nos sirve para comparar con el trabajo en general, y r/taquerosprogramadores para comparar con otro país.</aside>
 </section>
 
-<!-- 4. No es solo IT -->
+<!-- 3. Volumen -->
+<section class="diapo" data-escena="volumen" data-pasos="1">
+  <p class="kicker">Una advertencia</p>
+  <h2>Casi todo el corpus es posterior a ChatGPT</h2>
+  <p class="bajada" data-paso="1">Por eso comparamos <b style="color:var(--tinta)">porcentajes</b> por mes o trimestre, nunca cantidades.</p>
+  <div class="grafico"><svg></svg></div>
+  <p class="pie">Textos de r/devsarg por trimestre (posts y comentarios).</p>
+  <aside class="notas">El sub explotó a fines de 2022. Antes del corte hay menos del 4% de los textos. Si comparáramos cantidades, todo "aumenta". Por eso todo lo que sigue está en porcentajes.</aside>
+</section>
+
+<!-- 4. Método -->
 <section class="diapo">
+  <p class="kicker">Qué hicimos</p>
+  <h2>Cuatro formas de leer 1,9 millones de textos</h2>
+  <div class="tecnicas">
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#3987e5" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="18"/><path d="M14 28c4-5 12-5 16 0"/><circle cx="16" cy="17" r="1.5" fill="#3987e5"/><circle cx="28" cy="17" r="1.5" fill="#3987e5"/></svg><b>Tono</b><span>sentimiento y emociones con un modelo entrenado en español (RoBERTuito)</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#c98500" stroke-width="3" stroke-linecap="round"><rect x="6" y="8" width="14" height="12" rx="3"/><rect x="24" y="8" width="14" height="12" rx="3"/><rect x="6" y="24" width="14" height="12" rx="3"/><rect x="24" y="24" width="14" height="12" rx="3"/></svg><b>Temas</b><span>diccionarios, TF-IDF y agrupamiento automático (BERTopic)</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#d55181" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="5"/><circle cx="8" cy="10" r="3"/><circle cx="36" cy="12" r="3"/><circle cx="10" cy="35" r="3"/><circle cx="35" cy="34" r="3"/><path d="M18 18l-8-6M26 19l8-5M18 26l-6 7M26 26l7 6"/></svg><b>Vocabulario</b><span>word2vec antes y después: con qué palabras aparece cada palabra</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#199e70" stroke-width="3" stroke-linecap="round"><path d="M8 12h28M8 22h18M8 32h24"/><circle cx="34" cy="22" r="4"/></svg><b>Actores</b><span>entidades nombradas: empresas, tecnologías y herramientas de IA</span></div>
+  </div>
+  <aside class="notas">Cuatro técnicas del programa. Para el tono usamos un modelo de transformers entrenado con texto informal en español. Para los temas, diccionarios validados a mano, TF-IDF y BERTopic. Para el vocabulario, word2vec. Para los actores, NER más un diccionario.</aside>
+</section>
+
+<!-- 5. Línea de tiempo -->
+<section class="diapo" data-escena="tiempo">
+  <p class="kicker">Contexto</p>
+  <h2>ChatGPT no llegó solo</h2>
+  <p class="bajada">Alrededor del corte pasaron muchas cosas a la vez. Vamos a mostrar correlaciones, no causas.</p>
+  <div class="tiempo"><svg viewBox="0 0 1120 330"></svg></div>
+  <aside class="notas">Antes de los resultados, esto: en los mismos meses hubo despidos masivos en empresas tech, suba de tasas en Estados Unidos y, en Argentina, la devaluación de diciembre de 2023. No podemos separar el efecto de ChatGPT del resto.</aside>
+</section>
+
+<!-- 6. Tono -->
+<section class="diapo" data-escena="tono" data-pasos="1">
   <p class="kicker">Hipótesis A · Tono</p>
-  <h2>Pasa lo mismo en el trabajo en general y en México</h2>
-  <div class="cuerpo">
-    <div class="figura"><img src="../reports/figures/pres_tono_tres_subs.png" alt="Porcentaje de textos negativos por trimestre en los tres subreddits. Las tres curvas suben juntas."></div>
-    <div class="cifras">
-      <div class="cifra"><div class="valor chico">−1,6 pts</div><div class="etiqueta">diferencia entre el cambio de r/devsarg y el de r/empleos_AR (IC 95%: −3,8 a 0,8). No es propio de IT</div></div>
-      <div class="cifra"><div class="valor chico">6% a 13%</div><div class="etiqueta">enojo medio en r/devsarg, de 2021 a 2023</div></div>
-      <div class="cifra"><div class="valor chico">8% a 5%</div><div class="etiqueta">alegría media en r/devsarg, de 2021 a 2026</div></div>
+  <div class="apila">
+    <h2 data-ocultar="1">La conversación se volvió más negativa</h2>
+    <h2 data-paso="1">…pero la subida empezó antes de ChatGPT</h2>
+  </div>
+  <div class="grafico"><svg></svg></div>
+  <p class="pie">% de textos negativos por mes en r/devsarg (clasificador RoBERTuito). Pasá el mouse para ver cada mes.</p>
+  <aside class="notas">Clasificamos los 1,9 millones de textos. En r/devsarg los textos negativos pasan de 17% en 2021 a 37% en 2026. [Avanzar] Pero mirá la tendencia: antes del corte subía casi un punto por mes. Después sigue subiendo, pero cuatro veces más lento. ChatGPT coincide con el final de la subida, no con el comienzo.</aside>
+</section>
+
+<!-- 7. Comparación -->
+<section class="diapo" data-escena="comparacion" data-pasos="1">
+  <p class="kicker">Hipótesis A · Tono</p>
+  <div class="apila">
+    <h2 data-ocultar="1">Lo mismo pasa en el trabajo en general…</h2>
+    <h2 data-paso="1">…y en México</h2>
+  </div>
+  <div class="grafico"><svg></svg></div>
+  <div class="leyenda"><span><i style="background:var(--devsarg)"></i>r/devsarg</span><span><i style="background:var(--empleos)"></i>r/empleos_AR</span><span data-paso="1"><i style="background:var(--taqueros)"></i>r/taquerosprogramadores</span></div>
+  <aside class="notas">Si fuera un efecto de la IA sobre los programadores, r/devsarg tendría que empeorar más que el sub de trabajo en general. No pasa: las curvas son casi iguales. [Avanzar] Y el sub mexicano, desde que tiene datos, sigue la misma trayectoria. Tampoco es la economía argentina.</aside>
+</section>
+
+<!-- 8. Emociones -->
+<section class="diapo" data-escena="emociones">
+  <p class="kicker">Hipótesis A · Tono</p>
+  <h2>Más enojo, menos alegría</h2>
+  <div class="emociones">
+    <div class="emocion">
+      <div class="nombre">Enojo</div>
+      <div class="cifra-media"><span class="contador" data-desde="__ENOJO_21__" data-hasta="__ENOJO_26__" data-decimales="1">0</span>%</div>
+      <div class="barras">
+        <div class="barra"><span>2021</span><div class="riel"><div class="llenado" style="background:var(--tenue)" data-ancho="__ENOJO_21__"></div></div><b>__ENOJO_21_TXT__%</b></div>
+        <div class="barra"><span>2026</span><div class="riel"><div class="llenado" style="background:var(--empleos)" data-ancho="__ENOJO_26__"></div></div><b>__ENOJO_26_TXT__%</b></div>
+      </div>
+    </div>
+    <div class="emocion">
+      <div class="nombre">Alegría</div>
+      <div class="cifra-media"><span class="contador" data-desde="__ALEGRIA_21__" data-hasta="__ALEGRIA_26__" data-decimales="1">0</span>%</div>
+      <div class="barras">
+        <div class="barra"><span>2021</span><div class="riel"><div class="llenado" style="background:var(--tenue)" data-ancho="__ALEGRIA_21__"></div></div><b>__ALEGRIA_21_TXT__%</b></div>
+        <div class="barra"><span>2026</span><div class="riel"><div class="llenado" style="background:var(--devsarg)" data-ancho="__ALEGRIA_26__"></div></div><b>__ALEGRIA_26_TXT__%</b></div>
+      </div>
     </div>
   </div>
-  <span class="fuente">Diferencia en diferencias con bootstrap por hilos. Emociones: robertuito-emotion-analysis, probabilidad media.</span>
-  <span class="num"></span>
-  <aside class="notas">Si fuera un efecto de la IA sobre los programadores, r/devsarg tendría que empeorar más que r/empleos_AR. No pasa: los dos suben igual. Y el sub mexicano, desde que tiene datos, sigue la misma trayectoria, así que tampoco es la economía argentina. El cambio de tono es sobre todo más enojo y menos alegría.</aside>
+  <p class="pie">Probabilidad media de cada emoción en r/devsarg (robertuito-emotion-analysis). La tristeza y el miedo casi no cambian.</p>
+  <aside class="notas">El modelo de emociones dice que el cambio de tono es sobre todo enojo: se duplica. La alegría baja. La tristeza y el miedo casi no se mueven.</aside>
 </section>
 
-<!-- 5. Temas e IA -->
-<section class="diapo">
+<!-- 9. IA -->
+<section class="diapo" data-escena="ia" data-pasos="2">
   <p class="kicker">Hipótesis A · Temas</p>
-  <h2>La IA es el gran cambio de temas, y llega en dos escalones</h2>
-  <div class="cuerpo">
-    <div class="figura"><img src="../reports/figures/pres_ia_por_sub.png" alt="Porcentaje de textos que mencionan la IA por trimestre en los tres subreddits. Primer escalón en 2023, segundo desde 2025; r/devsarg llega a 13%."></div>
-    <div class="cifras">
-      <div class="cifra"><div class="valor chico">1 de cada 8</div><div class="etiqueta">textos de r/devsarg que mencionan la IA en 2026. Antes del corte, menos de 1 de cada 100</div></div>
-      <div class="cifra"><div class="valor chico">47% Claude</div><div class="etiqueta">de las menciones de herramientas de IA en el tercer trimestre de 2026. ChatGPT tenía el 92% en 2023</div></div>
-      <div class="cifra"><div class="valor chico">14% a 7%</div><div class="etiqueta">posts sobre aprender a programar. Sueldos y cambio de trabajo no bajan</div></div>
-    </div>
-  </div>
-  <span class="fuente">Diccionario de términos de IA sobre posts y comentarios. Temas: diccionarios validados a mano y BERTopic sobre 83 mil posts.</span>
-  <span class="num"></span>
-  <aside class="notas">La IA es lo que más cambia, pero en dos escalones: un primer salto en 2023 con ChatGPT y uno mucho mayor en 2025 y 2026 con las herramientas para programar. Pasa igual en México. En 2026 Claude ya se nombra más que ChatGPT. Los despidos también suben (de 0,35% a 1,18% de los comentarios), pero de a poco desde 2022. La parte de la hipótesis que decía que se iba a hablar menos de sueldos y de cambiar de trabajo no se cumple. Lo que sí cae es aprender a programar: cursos, bootcamps, academias.</aside>
+  <h2>La IA es el tema que más crece, en dos escalones</h2>
+  <div class="grafico"><svg></svg></div>
+  <div class="leyenda"><span><i style="background:var(--devsarg)"></i>r/devsarg</span><span><i style="background:var(--empleos)"></i>r/empleos_AR</span><span><i style="background:var(--taqueros)"></i>r/taquerosprogramadores</span></div>
+  <aside class="notas">% de textos que mencionan la IA. [Avanzar] Primer escalón: ChatGPT, en 2023, pero chico: del 1% al 2%. [Avanzar] El segundo escalón es mucho más grande, en 2025 y 2026, con las herramientas para programar. Hoy uno de cada ocho textos de r/devsarg habla de IA.</aside>
 </section>
 
-<!-- 6. Vocabulario -->
-<section class="diapo">
+<!-- 10. Herramientas -->
+<section class="diapo" data-escena="herramientas">
+  <p class="kicker">Actores</p>
+  <h2>De ChatGPT a Claude</h2>
+  <div class="grafico"><svg></svg></div>
+  <p class="pie">% de las menciones de herramientas de IA por trimestre, tres subreddits juntos (diccionario de actores).</p>
+  <aside class="notas">Qué herramienta se nombra. ChatGPT tenía el 92% de las menciones en 2023. En 2026 Claude lo pasó. Es otra señal de que la conversación cambió con las herramientas para programar, no con el chat.</aside>
+</section>
+
+<!-- 11. Temas -->
+<section class="diapo" data-escena="temas" data-pasos="1">
+  <p class="kicker">Hipótesis A · Temas</p>
+  <div class="apila">
+    <h2 data-ocultar="1">¿De qué hablaban los posts antes del corte?</h2>
+    <h2 data-paso="1">Menos aprender a programar, más sueldos e IA</h2>
+  </div>
+  <div class="grafico"><svg></svg></div>
+  <p class="pie">% de posts de r/devsarg en cada tema, antes y después del corte (BERTopic sobre 83 mil posts).</p>
+  <aside class="notas">Temas que encontró BERTopic, antes del corte. [Avanzar] Después: cae aprender a programar, que era el tema principal, y caen las tecnologías puntuales. Suben sueldos, entrevistas e IA. La hipótesis decía que se iba a hablar menos de sueldos: pasó lo contrario.</aside>
+</section>
+
+<!-- 12. Vocabulario -->
+<section class="diapo" data-escena="vocab" data-pasos="1">
   <p class="kicker">Hipótesis C · Vocabulario</p>
-  <h2>"IA" cambió de significado; "trabajo" y "junior", no</h2>
-  <div class="vocab">
-    <div class="palabra">
-      <div class="termino">ia <span>vecinos más cercanos (word2vec)</span></div>
-      <div class="periodo">Antes del corte</div>
-      <div class="chips"><span class="chip">artificial</span><span class="chip">ciencia</span><span class="chip">científicos</span><span class="chip">ciencias</span><span class="chip">estadística</span><span class="chip">computación</span></div>
-      <div class="periodo">Después</div>
-      <div class="chips"><span class="chip nuevo">chatgpt</span><span class="chip nuevo">agentes</span><span class="chip nuevo">llm</span><span class="chip nuevo">claude</span><span class="chip nuevo">gpt</span><span class="chip nuevo">reemplazar</span><span class="chip nuevo">herramienta</span></div>
-      <p class="nota-chip"><span class="muestra-chip"></span>vecino que no aparece antes del corte</p>
-    </div>
-    <div class="palabra">
-      <div class="termino">remoto</div>
-      <div class="periodo">Antes del corte</div>
-      <div class="chips"><span class="chip">relocalización</span><span class="chip">latam</span><span class="chip">España</span><span class="chip">Colombia</span><span class="chip">afuera</span><span class="chip">Chile</span></div>
-      <div class="periodo">Después</div>
-      <div class="chips"><span class="chip nuevo">híbrido</span><span class="chip nuevo">presencial</span><span class="chip nuevo">contractor</span><span class="chip nuevo">fulltime</span><span class="chip">afuera</span><span class="chip nuevo">homeoffice</span></div>
-      <p class="nota-chip">De "trabajar para afuera" a una modalidad más</p>
-    </div>
-    <div class="cifras">
-      <div class="cifra"><div class="valor chico">0,08 vs. 0,29</div><div class="etiqueta">vecinos compartidos por "ia" entre períodos, contra dos muestras del mismo período</div></div>
-      <div class="cifra"><div class="valor chico">65 a 808</div><div class="etiqueta">apariciones de "ia" por millón de palabras</div></div>
-      <div class="cifra"><div class="valor chico">Sin cambio</div><div class="etiqueta">"trabajo", "junior" y "empresa": su cambio está dentro del ruido del modelo</div></div>
-    </div>
+  <h2>¿Con qué palabras aparece cada palabra?</h2>
+  <div class="palabras" role="group" aria-label="Palabra"></div>
+  <div class="vecinos">
+    <div><div class="periodo-titulo">Antes del corte</div><div class="chips" data-periodo="antes"></div></div>
+    <div><div class="periodo-titulo">Después</div><div class="chips" data-periodo="despues"></div></div>
   </div>
-  <span class="fuente">Word2vec skip-gram, 5 semillas por período; el corpus de después se submuestrea al tamaño del de antes (2,25 M de palabras).</span>
-  <span class="num"></span>
-  <aside class="notas">Entrenamos word2vec antes y después, con corpus del mismo tamaño, y comparamos los vecinos de cada palabra. Para saber si un cambio es real, lo comparamos con lo que cambian dos modelos del mismo período. "IA" pasa de ser un término académico a ser productos: chatgpt, claude, agentes, y aparece "reemplazar". Las palabras que nombraba la hipótesis, trabajo, junior y empresa, no cambian más que el ruido. Así que la hipótesis C se cumple para pocas palabras, no para las que esperábamos.</aside>
+  <div class="medidor">
+    <div><div class="valor" data-medida="entre">0</div><div class="etq">vecinos compartidos entre antes y después</div></div>
+    <div><div class="valor" data-medida="base" style="color:var(--tinta-2)">0</div><div class="etq">entre dos muestras del mismo período (ruido)</div></div>
+    <div style="margin-left:auto"><span class="veredicto" data-medida="veredicto"></span></div>
+  </div>
+  <p class="pie">Vecinos más cercanos en modelos word2vec entrenados antes y después del corte, con corpus del mismo tamaño. Hacé clic en otra palabra.</p>
+  <aside class="notas">Entrenamos word2vec antes y después y miramos los vecinos de cada palabra. "IA" antes era un término académico: ciencia, estadística. [Avanzar] Después son productos: chatgpt, claude, agentes, y aparece "reemplazar". Si tocan "trabajo" o "junior", el cambio es igual al ruido entre dos muestras del mismo período: no cambian de significado.</aside>
 </section>
 
-<!-- 7. Mercado -->
-<section class="diapo">
+<!-- 13. Mercado -->
+<section class="diapo" data-escena="mercado" data-pasos="2">
   <p class="kicker">Hipótesis B · Mercado</p>
-  <h2>Los avisos de software ya caían antes de ChatGPT</h2>
-  <div class="cuerpo">
-    <div class="figura"><img src="../reports/figures/pres_mercado.png" alt="Índice base noviembre de 2022 igual a 100: avisos de software en Indeed y Hacker News caen desde 2022; el empleo informático registrado en Argentina sigue creciendo."></div>
-    <div class="cifras">
-      <div class="cifra"><div class="valor chico">−36% y −44%</div><div class="etiqueta">avisos de software en EE.UU.: de febrero a noviembre de 2022, y después del corte</div></div>
-      <div class="cifra"><div class="valor chico">+7,3%</div><div class="etiqueta">empleo informático registrado en Argentina, de fines de 2022 a fines de 2025</div></div>
-      <div class="cifra"><div class="valor chico">−0,71 / 0,10</div><div class="etiqueta">correlación entre tono y avisos: fuerte en la tendencia, nula mes a mes</div></div>
+  <div class="apila">
+    <h2 data-ocultar="1">Los avisos de software cayeron a la mitad…</h2>
+    <h2 data-paso="1" data-ocultar="2">…pero la caída empezó en febrero de 2022</h2>
+    <h2 data-paso="2">En Argentina, el empleo informático siguió creciendo</h2>
+  </div>
+  <div class="grafico"><svg></svg></div>
+  <div class="leyenda"><span><i style="background:var(--magenta)"></i>Indeed: avisos de software (EE.UU.)</span><span><i style="background:var(--violeta)"></i>Hacker News: avisos</span><span data-paso="2"><i style="background:var(--verde)"></i>SIPA: empleo informático (Argentina)</span></div>
+  <aside class="notas">Índice con noviembre de 2022 igual a 100. Los avisos de software cayeron a la mitad. [Avanzar] Pero la caída empezó nueve meses antes de ChatGPT, con la suba de tasas y los despidos tech. [Avanzar] Y en Argentina el empleo informático registrado no cayó: creció 7%.</aside>
+</section>
+
+<!-- 14. Correlación -->
+<section class="diapo" data-escena="correlacion" data-pasos="1">
+  <p class="kicker">Hipótesis B · Mercado</p>
+  <h2>El tono y los avisos coinciden en la tendencia, no mes a mes</h2>
+  <div class="emociones" style="margin-top:20px">
+    <div>
+      <div class="cifra-grande"><span class="contador" data-hasta="__CORR_NIV__" data-decimales="2">0</span></div>
+      <p class="etiqueta">correlación en niveles: los años con menos avisos son los más negativos</p>
+    </div>
+    <div data-paso="1">
+      <div class="cifra-grande" style="color:var(--tinta-2)">__CORR_VAR_TXT__</div>
+      <p class="etiqueta">correlación de los cambios mes a mes: cuando caen los avisos, el tono no reacciona</p>
     </div>
   </div>
-  <span class="fuente">Indeed Hiring Lab, Hacker News "Who is hiring?", OEDE/SIPA. Correlación de Spearman, marzo de 2021 a septiembre de 2026.</span>
-  <span class="num"></span>
-  <aside class="notas">Los avisos de software empezaron a caer en febrero de 2022, nueve meses antes de ChatGPT, con la suba de tasas y los despidos tech. En Argentina el empleo informático registrado no cayó. Tono y avisos correlacionan fuerte en niveles, porque uno sube y el otro baja en el mismo período, pero mes a mes no se mueven juntos. La hipótesis B se sostiene solo en la versión débil.</aside>
+  <p class="pie">Correlación de Spearman entre el % de textos negativos de r/devsarg y los avisos de Indeed, marzo de 2021 a septiembre de 2026.</p>
+  <aside class="notas">En niveles, la correlación es fuerte: −0,71. Pero eso pasa con cualquier par de series con tendencia. [Avanzar] Si miramos los cambios mes a mes, la correlación es cero. La hipótesis B se sostiene solo en la versión débil.</aside>
 </section>
 
-<!-- 8. Conclusión -->
-<section class="diapo oscura">
-  <p class="kicker">Conclusión</p>
-  <h2>ChatGPT no es el punto de quiebre: es una etapa de un cambio que empezó antes</h2>
-  <table class="tabla-hip">
-    <tr><td>A. Tono más negativo</td><td><span class="estado parcial">◐ En parte</span></td><td>Sube de 17% a 37%, pero empieza en 2021 y es igual fuera de IT</td></tr>
-    <tr><td>A. Más IA, despidos y búsqueda</td><td><span class="estado parcial">◐ En parte</span></td><td>IA y despidos sí; búsqueda de empleo baja en r/devsarg</td></tr>
-    <tr><td>A. Menos sueldos y cambio de trabajo</td><td><span class="estado no">✕ No</span></td><td>Se habla más de sueldos; lo que cae es aprender a programar</td></tr>
-    <tr><td>B. El tono sigue a las ofertas</td><td><span class="estado parcial">◐ En parte</span></td><td>Coinciden en la tendencia de varios años, no mes a mes</td></tr>
-    <tr><td>C. Cambia "trabajo", "junior", "empresa"</td><td><span class="estado no">✕ No</span></td><td>Cambian "ia", "remoto" y "mercado"</td></tr>
-  </table>
-  <p class="cierre">Cambió el tono y cambió de qué se habla. La IA para programar de 2025 pesa más en la conversación que el lanzamiento de ChatGPT.</p>
-  <p class="advertencia">Es correlación, no causalidad: el corte coincide con despidos tech, la suba de tasas en EE.UU. y la devaluación argentina de 2023.</p>
-  <span class="num"></span>
-  <aside class="notas">Resumen por hipótesis. Ninguna se cumple tal como la planteamos: el tono empeoró, pero empezó antes y no es propio de IT; los temas cambiaron, sobre todo hacia la IA, y en dos etapas; el vocabulario cambió para la IA y el trabajo remoto. Cierre: no podemos atribuir el cambio a ChatGPT, porque se superpone con otros factores. Gracias, preguntas.</aside>
+<!-- 15. Conclusión -->
+<section class="diapo" data-escena="conclusion">
+  <p class="kicker">Resultado por hipótesis</p>
+  <h2>Ninguna hipótesis se cumple tal como la planteamos</h2>
+  <div class="hipotesis">
+    <div class="hip" data-paso="0"><div class="letra">A</div><div><b>Tono más negativo</b><span>Sube de 17% a 37%, pero empieza en 2021 y es igual fuera de IT</span></div><div class="estado parcial">◐ En parte</div></div>
+    <div class="hip" data-paso="0"><div class="letra">A</div><div><b>Más IA y despidos</b><span>Sí, en dos escalones; la búsqueda de empleo no sube</span></div><div class="estado parcial">◐ En parte</div></div>
+    <div class="hip" data-paso="0"><div class="letra">A</div><div><b>Menos sueldos y cambio de trabajo</b><span>Se habla más de sueldos; lo que cae es aprender a programar</span></div><div class="estado no">✕ No</div></div>
+    <div class="hip" data-paso="0"><div class="letra">B</div><div><b>El tono sigue a las ofertas</b><span>En la tendencia de varios años, no mes a mes</span></div><div class="estado parcial">◐ En parte</div></div>
+    <div class="hip" data-paso="0"><div class="letra">C</div><div><b>Cambian "trabajo", "junior", "empresa"</b><span>No; cambian "ia", "remoto" y "mercado"</span></div><div class="estado no">✕ No</div></div>
+  </div>
+  <aside class="notas">Resumen. El tono empeoró, pero empezó antes y no es propio de IT. Los temas cambiaron hacia la IA, en dos etapas. El vocabulario cambió para la IA y el trabajo remoto, no para las palabras que esperábamos.</aside>
 </section>
 
+<!-- 16. Cierre -->
+<section class="diapo cierre">
+  <div class="centro">
+    <p class="kicker">Conclusión</p>
+    <h1>ChatGPT no es el punto de quiebre.</h1>
+    <p class="bajada" style="margin-top:28px;font-size:26px" data-paso="1">Es una etapa de un cambio que empezó en 2021 y que la IA para programar profundizó en 2025.</p>
+  </div>
+  <p class="pie">Correlación, no causalidad: el corte coincide con despidos tech, suba de tasas y la devaluación argentina. ¡Gracias!</p>
+  <aside class="notas">Cierre: no podemos atribuir el cambio a ChatGPT. La conversación ya venía empeorando y el cambio más fuerte de temas llega con las herramientas para programar de 2025. Gracias, preguntas.</aside>
+</section>
+
+<div class="avance" id="avance"></div>
 </div></div>
 
-<div class="panel-notas" id="panelNotas"><small>Notas · tecla N para ocultar</small><div id="textoNotas"></div></div>
-<div class="ayuda">← → para avanzar · N notas · F pantalla completa · P todas</div>
+<div class="panel-notas" id="panelNotas"><small>Notas · N para ocultar</small><div id="textoNotas"></div></div>
+<div class="ayuda">← → avanzar · N notas · F pantalla completa · P todas</div>
 
 <script>
-  const diapos = [...document.querySelectorAll(".diapo")];
-  const lienzo = document.getElementById("lienzo");
-  const panel = document.getElementById("panelNotas");
-  const textoNotas = document.getElementById("textoNotas");
-  let actual = 0;
+const D = {"total_textos":1893480,"avisos_hn":93378,"volumen":{"trimestres":[["2021Q1",554],["2021Q2",652],["2021Q3",830],["2021Q4",1067],["2022Q1",2508],["2022Q2",6893],["2022Q3",10912],["2022Q4",14511],["2023Q1",23386],["2023Q2",35967],["2023Q3",53093],["2023Q4",55433],["2024Q1",72171],["2024Q2",67136],["2024Q3",62691],["2024Q4",61434],["2025Q1",54814],["2025Q2",66440],["2025Q3",70598],["2025Q4",57226],["2026Q1",65572],["2026Q2",60258],["2026Q3",55118]],"pct_antes":3.7},"tono":{"series":{"devsarg":[["2021-02",10.8],["2021-03",13.9],["2021-04",16.1],["2021-05",10.9],["2021-06",12.1],["2021-07",13.0],["2021-08",13.6],["2021-09",21.0],["2021-10",19.2],["2021-11",21.7],["2021-12",23.4],["2022-01",16.5],["2022-02",24.2],["2022-03",19.9],["2022-04",22.0],["2022-05",25.5],["2022-06",23.9],["2022-07",24.2],["2022-08",25.7],["2022-09",24.9],["2022-10",28.2],["2022-11",25.6],["2022-12",26.5],["2023-01",27.9],["2023-02",29.4],["2023-03",30.9],["2023-04",26.1],["2023-05",34.6],["2023-06",33.6],["2023-07",34.8],["2023-08",32.1],["2023-09",32.6],["2023-10",33.4],["2023-11",32.1],["2023-12",34.0],["2024-01",34.3],["2024-02",33.4],["2024-03",34.1],["2024-04",35.5],["2024-05",35.2],["2024-06",34.7],["2024-07",33.7],["2024-08",32.1],["2024-09",35.3],["2024-10",32.8],["2024-11",33.4],["2024-12",33.9],["2025-01",31.7],["2025-02",32.9],["2025-03",32.9],["2025-04",35.4],["2025-05",36.6],["2025-06",35.4],["2025-07",37.3],["2025-08",38.6],["2025-09",36.8],["2025-10",36.1],["2025-11",36.1],["2025-12",36.2],["2026-01",35.1],["2026-02",35.9],["2026-03",38.4],["2026-04",37.8],["2026-05",39.2],["2026-06",36.5],["2026-07",36.0],["2026-08",36.6],["2026-09",37.0]],"empleos_AR":[["2021-01",14.8],["2021-02",17.4],["2021-03",17.9],["2021-04",16.5],["2021-05",11.3],["2021-06",10.9],["2021-07",17.2],["2021-08",18.4],["2021-09",17.7],["2021-10",17.1],["2021-11",14.0],["2021-12",9.6],["2022-01",19.5],["2022-02",37.7],["2022-03",18.4],["2022-04",12.8],["2022-05",14.5],["2022-06",23.9],["2022-08",26.8],["2022-09",23.1],["2022-10",29.1],["2022-11",25.0],["2022-12",32.8],["2023-01",27.8],["2023-02",33.6],["2023-03",36.2],["2023-04",31.0],["2023-05",34.1],["2023-06",31.8],["2023-07",31.2],["2023-08",31.5],["2023-09",34.9],["2023-10",34.3],["2023-11",33.7],["2023-12",32.3],["2024-01",32.2],["2024-02",35.2],["2024-03",34.0],["2024-04",35.5],["2024-05",32.0],["2024-06",34.3],["2024-07",31.6],["2024-08",34.1],["2024-09",36.1],["2024-10",35.3],["2024-11",33.3],["2024-12",35.0],["2025-01",35.1],["2025-02",35.4],["2025-03",34.5],["2025-04",37.6],["2025-05",33.5],["2025-06",32.1],["2025-07",36.5],["2025-08",35.5],["2025-09",34.2],["2025-10",37.9],["2025-11",38.0],["2025-12",36.6],["2026-01",32.1],["2026-02",38.6],["2026-03",38.7],["2026-04",39.9],["2026-05",36.9],["2026-06",34.7],["2026-07",37.3],["2026-08",38.0],["2026-09",37.7]],"taquerosprogramadores":[["2023-09",25.5],["2023-10",26.2],["2023-11",31.4],["2023-12",30.4],["2024-01",29.6],["2024-02",32.0],["2024-03",32.0],["2024-04",34.4],["2024-05",36.6],["2024-06",33.0],["2024-07",36.5],["2024-08",35.6],["2024-09",36.9],["2024-10",36.1],["2024-11",35.7],["2024-12",34.8],["2025-01",37.2],["2025-02",38.1],["2025-03",34.3],["2025-04",35.5],["2025-05",37.0],["2025-06",36.3],["2025-07",38.9],["2025-08",37.5],["2025-09",36.4],["2025-10",38.3],["2025-11",39.2],["2025-12",37.4],["2026-01",37.1],["2026-02",39.5],["2026-03",37.2],["2026-04",38.9],["2026-05",40.9],["2026-06",38.4],["2026-07",42.1],["2026-08",39.7],["2026-09",43.5]]},"tendencia":{"antes":[["2021-02",11.82],["2021-03",12.59],["2021-04",13.35],["2021-05",14.11],["2021-06",14.87],["2021-07",15.64],["2021-08",16.4],["2021-09",17.16],["2021-10",17.92],["2021-11",18.68],["2021-12",19.45],["2022-01",20.21],["2022-02",20.97],["2022-03",21.73],["2022-04",22.5],["2022-05",23.26],["2022-06",24.02],["2022-07",24.78],["2022-08",25.55],["2022-09",26.31],["2022-10",27.07],["2022-11",27.83]],"despues":[["2022-12",30.51],["2023-01",30.68],["2023-02",30.85],["2023-03",31.01],["2023-04",31.18],["2023-05",31.34],["2023-06",31.51],["2023-07",31.67],["2023-08",31.84],["2023-09",32.0],["2023-10",32.17],["2023-11",32.33],["2023-12",32.5],["2024-01",32.67],["2024-02",32.83],["2024-03",33.0],["2024-04",33.16],["2024-05",33.33],["2024-06",33.49],["2024-07",33.66],["2024-08",33.82],["2024-09",33.99],["2024-10",34.15],["2024-11",34.32],["2024-12",34.48],["2025-01",34.65],["2025-02",34.82],["2025-03",34.98],["2025-04",35.15],["2025-05",35.31],["2025-06",35.48],["2025-07",35.64],["2025-08",35.81],["2025-09",35.97],["2025-10",36.14],["2025-11",36.3],["2025-12",36.47],["2026-01",36.64],["2026-02",36.8],["2026-03",36.97],["2026-04",37.13],["2026-05",37.3],["2026-06",37.46],["2026-07",37.63],["2026-08",37.79],["2026-09",37.96]],"pendiente_antes":0.76,"pendiente_despues":0.17}},"anual":{"devsarg":{"neg":{"2021":16.9,"2022":25.2,"2023":32.5,"2024":34.1,"2025":35.7,"2026":37.0},"enojo":{"2021":6.4,"2022":9.8,"2023":13.2,"2024":13.6,"2025":13.7,"2026":14.1},"alegria":{"2021":8.3,"2022":6.9,"2023":6.0,"2024":5.6,"2025":5.5,"2026":5.3},"tristeza":{"2021":2.6,"2022":3.3,"2023":3.6,"2024":3.5,"2025":3.6,"2026":3.5}},"empleos_AR":{"neg":{"2021":15.2,"2022":27.4,"2023":33.0,"2024":34.2,"2025":35.7,"2026":37.3},"enojo":{"2021":6.3,"2022":12.6,"2023":15.0,"2024":15.2,"2025":15.7,"2026":16.4},"alegria":{"2021":8.5,"2022":6.9,"2023":6.0,"2024":6.4,"2025":6.0,"2026":5.9},"tristeza":{"2021":2.8,"2022":4.2,"2023":4.7,"2024":5.2,"2025":5.3,"2026":5.7}},"taquerosprogramadores":{"neg":{"2023":29.2,"2024":34.7,"2025":37.1,"2026":39.7},"enojo":{"2023":8.1,"2024":9.9,"2025":10.5,"2026":11.1},"alegria":{"2023":5.6,"2024":5.1,"2025":4.6,"2026":4.3},"tristeza":{"2023":3.9,"2024":4.0,"2025":4.1,"2026":4.6}}},"ia":{"series":{"devsarg":[["2021-02",0.36],["2021-05",0.46],["2021-08",0.96],["2021-11",1.03],["2022-02",0.28],["2022-05",0.86],["2022-08",0.55],["2022-11",1.01],["2023-02",2.15],["2023-05",2.68],["2023-08",1.65],["2023-11",1.97],["2024-02",2.0],["2024-05",2.35],["2024-08",2.37],["2024-11",2.78],["2025-02",4.06],["2025-05",5.64],["2025-08",6.31],["2025-11",6.8],["2026-02",13.02],["2026-05",12.92],["2026-08",12.46]],"empleos_AR":[["2021-02",0.06],["2021-05",0.0],["2021-08",0.27],["2021-11",0.4],["2022-02",0.17],["2022-05",0.27],["2022-08",0.24],["2022-11",0.26],["2023-02",1.35],["2023-05",1.07],["2023-08",0.63],["2023-11",0.77],["2024-02",1.13],["2024-05",0.77],["2024-08",0.89],["2024-11",1.04],["2025-02",1.58],["2025-05",2.44],["2025-08",1.86],["2025-11",1.99],["2026-02",2.26],["2026-05",2.24],["2026-08",2.95]],"taquerosprogramadores":[["2023-08",4.22],["2023-11",2.34],["2024-02",2.54],["2024-05",1.97],["2024-08",1.9],["2024-11",2.6],["2025-02",4.55],["2025-05",4.4],["2025-08",5.29],["2025-11",4.79],["2026-02",9.58],["2026-05",10.5],["2026-08",10.49]]},"herramientas":{"ChatGPT":[["2023-02",84.8],["2023-05",92.4],["2023-08",86.6],["2023-11",83.7],["2024-02",78.4],["2024-05",73.4],["2024-08",79.5],["2024-11",75.9],["2025-02",60.8],["2025-05",60.3],["2025-08",50.1],["2025-11",48.7],["2026-02",30.5],["2026-05",22.8],["2026-08",25.0]],"Claude":[["2023-02",0.3],["2023-05",0.2],["2023-08",0.4],["2023-11",0.7],["2024-02",1.0],["2024-05",3.5],["2024-08",4.4],["2024-11",4.7],["2025-02",8.1],["2025-05",7.8],["2025-08",13.8],["2025-11",15.2],["2026-02",36.2],["2026-05",43.2],["2026-08",46.6]],"Copilot":[["2023-02",9.0],["2023-05",3.8],["2023-08",6.8],["2023-11",8.7],["2024-02",11.3],["2024-05",14.1],["2024-08",9.4],["2024-11",11.1],["2025-02",10.0],["2025-05",8.4],["2025-08",8.9],["2025-11",7.3],["2026-02",7.9],["2026-05",7.2],["2026-08",4.6]],"Cursor":[["2023-02",1.0],["2023-05",0.7],["2023-08",0.9],["2023-11",0.4],["2024-02",0.9],["2024-05",1.1],["2024-08",1.5],["2024-11",2.7],["2025-02",7.3],["2025-05",8.9],["2025-08",11.4],["2025-11",10.8],["2026-02",7.6],["2026-05",6.6],["2026-08",3.8]],"Gemini":[["2023-02",1.0],["2023-05",1.3],["2023-08",3.6],["2023-11",3.9],["2024-02",2.5],["2024-05",4.6],["2024-08",2.4],["2024-11",1.9],["2025-02",2.9],["2025-05",6.2],["2025-08",7.4],["2025-11",10.0],["2026-02",8.9],["2026-05",7.0],["2026-08",6.1]]}},"temas":[{"tema":"Aprender a programar","antes":14.3,"despues":6.6},{"tema":"Frontend (JS, HTML, CSS)","antes":4.8,"despues":1.7},{"tema":"Java y backend","antes":2.8,"despues":2.0},{"tema":"Sueldo y condiciones","antes":2.7,"despues":6.5},{"tema":"IA y automatización","antes":2.2,"despues":5.6},{"tema":"Entrevistas, CV y selección","antes":5.4,"despues":8.3},{"tema":"Mercado saturado y economía","antes":0.6,"despues":1.9}],"vocab":{"ia":{"antes":["artificial","ciencia","cientificos","ai","ciencias","estadistica","computacion","science"],"despues":["ai","chatgpt","ias","agentes","llm","llms","claude","gpt"],"entre":0.08,"base":0.29,"cambia":true},"remoto":{"antes":["relocalizacion","latam","españa","remota","colombia","afuera","home","mix"],"despues":["hibrido","full","presencial","contractor","fulltime","time","afuera","lun"],"entre":0.09,"base":0.33,"cambia":true},"mercado":{"antes":["saturado","insercion","insertarse","saturada","mundo","ambito","trainees","saturando"],"despues":["saturado","saturadisimo","mundo","rubro","destruido","panorama","ambito","saturacion"],"entre":0.18,"base":0.33,"cambia":true},"trabajo":{"antes":["laburo","empleo","trabajar","trabajos","puesto","estadia","trabajando","socio"],"despues":["laburo","empleo","trabajar","trabajos","puesto","remoto","laburito","laburar"],"entre":0.34,"base":0.34,"cambia":false},"junior":{"antes":["trainee","semisenior","senior","jr+","dev","juniors","semi","210k"],"despues":["trainee","senior","semisenior","dev","semi","fullstack","developer","desarrollador"],"entre":0.4,"base":0.52,"cambia":false},"empresa":{"antes":["consultora","compañia","pyme","multinacional","startup","factory","mediana","posicion"],"despues":["consultora","startup","pyme","compañia","multinacional","posicion","factory","agencia"],"entre":0.5,"base":0.52,"cambia":false}},"mercado":{"indeed":[["2020-02",70.0],["2020-03",66.6],["2020-04",44.1],["2020-05",41.1],["2020-06",45.9],["2020-07",51.1],["2020-08",53.8],["2020-09",55.0],["2020-10",62.1],["2020-11",69.8],["2020-12",71.3],["2021-01",72.9],["2021-02",88.5],["2021-03",91.0],["2021-04",96.0],["2021-05",103.7],["2021-06",104.1],["2021-07",104.3],["2021-08",127.3],["2021-09",123.3],["2021-10",140.0],["2021-11",139.5],["2021-12",128.0],["2022-01",135.1],["2022-02",156.4],["2022-03",149.2],["2022-04",149.0],["2022-05",152.6],["2022-06",138.1],["2022-07",129.0],["2022-08",128.2],["2022-09",116.7],["2022-10",108.9],["2022-11",100.0],["2022-12",90.7],["2023-01",83.2],["2023-02",74.1],["2023-03",72.8],["2023-04",76.4],["2023-05",78.6],["2023-06",65.6],["2023-07",65.2],["2023-08",60.6],["2023-09",58.8],["2023-10",59.5],["2023-11",59.2],["2023-12",59.5],["2024-01",57.3],["2024-02",58.7],["2024-03",58.4],["2024-04",58.1],["2024-05",55.4],["2024-06",52.4],["2024-07",53.2],["2024-08",49.8],["2024-09",52.5],["2024-10",52.6],["2024-11",49.9],["2024-12",52.1],["2025-01",50.8],["2025-02",45.4],["2025-03",47.9],["2025-04",50.0],["2025-05",50.1],["2025-06",56.3],["2025-07",55.4],["2025-08",55.3],["2025-09",53.1],["2025-10",52.5],["2025-11",53.6],["2025-12",53.6],["2026-01",50.7],["2026-02",56.4],["2026-03",57.3],["2026-04",57.8],["2026-05",61.0],["2026-06",59.2],["2026-07",57.1],["2026-08",52.7],["2026-09",56.5],["2026-10",56.3]],"hn":[["2019-01",149.7],["2019-02",151.0],["2019-03",149.2],["2019-04",157.7],["2019-05",151.8],["2019-06",152.9],["2019-07",146.8],["2019-08",143.2],["2019-09",140.5],["2019-10",133.6],["2019-11",132.1],["2019-12",122.2],["2020-01",119.0],["2020-02",123.1],["2020-03",115.1],["2020-04",109.6],["2020-05",100.1],["2020-06",105.7],["2020-07",115.4],["2020-08",121.8],["2020-09",133.6],["2020-10",137.1],["2020-11",142.9],["2020-12",142.5],["2021-01",159.2],["2021-02",174.2],["2021-03",186.0],["2021-04",179.6],["2021-05",183.9],["2021-06",184.0],["2021-07",183.3],["2021-08",178.6],["2021-09",171.2],["2021-10",178.7],["2021-11",167.8],["2021-12",160.3],["2022-01",150.6],["2022-02",153.8],["2022-03",159.4],["2022-04",156.4],["2022-05",152.2],["2022-06",137.1],["2022-07",128.6],["2022-08",113.5],["2022-09",108.8],["2022-10",101.5],["2022-11",100.0],["2022-12",93.7],["2023-01",87.7],["2023-02",82.5],["2023-03",81.8],["2023-04",75.3],["2023-05",70.2],["2023-06",67.1],["2023-07",67.1],["2023-08",64.7],["2023-09",65.8],["2023-10",67.1],["2023-11",68.2],["2023-12",65.3],["2024-01",63.8],["2024-02",62.9],["2024-03",63.7],["2024-04",67.5],["2024-05",70.1],["2024-06",76.3],["2024-07",71.2],["2024-08",68.6],["2024-09",65.2],["2024-10",64.8],["2024-11",66.8],["2024-12",63.1],["2025-01",68.6],["2025-02",70.2],["2025-03",72.3],["2025-04",65.8],["2025-05",66.1],["2025-06",67.8],["2025-07",68.0],["2025-08",64.0],["2025-09",64.7],["2025-10",70.7],["2025-11",76.0],["2025-12",70.1],["2026-01",71.4],["2026-02",67.3],["2026-03",72.5],["2026-04",66.1],["2026-05",65.7],["2026-06",60.8],["2026-07",54.7],["2026-08",50.5],["2026-09",51.0],["2026-10",53.1]],"sipa":[["2019-02",74.9],["2019-05",76.2],["2019-08",78.0],["2019-11",79.4],["2020-02",80.6],["2020-05",80.4],["2020-08",80.7],["2020-11",82.5],["2021-02",84.3],["2021-05",87.7],["2021-08",91.8],["2021-11",93.4],["2022-02",95.7],["2022-05",97.9],["2022-08",99.5],["2022-11",100.0],["2023-02",100.4],["2023-05",100.6],["2023-08",101.4],["2023-11",102.5],["2024-02",103.0],["2024-05",103.6],["2024-08",104.5],["2024-11",105.9],["2025-02",106.6],["2025-05",106.8],["2025-08",107.2],["2025-11",107.3]]},"correlaciones":{"niveles":-0.71,"variaciones":0.1},"eventos":[{"fecha":"2021-06-29","tipo":"ia","texto":"Copilot (preview)"},{"fecha":"2022-03-16","tipo":"macro_global","texto":"Suba de tasas Fed"},{"fecha":"2022-06-21","tipo":"ia","texto":"Copilot"},{"fecha":"2022-11-04","tipo":"despidos","texto":"Despidos Twitter"},{"fecha":"2022-11-09","tipo":"despidos","texto":"Despidos Meta"},{"fecha":"2022-11-30","tipo":"ia","texto":"ChatGPT"},{"fecha":"2023-01-18","tipo":"despidos","texto":"Despidos Microsoft"},{"fecha":"2023-01-20","tipo":"despidos","texto":"Despidos Google"},{"fecha":"2023-03-14","tipo":"ia","texto":"GPT-4"},{"fecha":"2023-08-14","tipo":"macro_ar","texto":"Devaluación PASO"},{"fecha":"2023-12-13","tipo":"macro_ar","texto":"Devaluación"},{"fecha":"2024-03-04","tipo":"ia","texto":"Claude 3"},{"fecha":"2025-04-14","tipo":"macro_ar","texto":"Fin del cepo"}]};
+if (new URLSearchParams(location.search).has("estatico")) document.documentElement.style.setProperty("--t", 0);
+const NS = "http://www.w3.org/2000/svg";
+const T = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--t")) || 0;
+const COL = { devsarg: "#3987e5", empleos_AR: "#d95926", taquerosprogramadores: "#199e70",
+  tinta: "#f0efec", tinta2: "#c3c2b7", tenue: "#898781", grilla: "#2c2c2a", eje: "#383835",
+  amarillo: "#c98500", magenta: "#d55181", violeta: "#9085e9", verde: "#2f9e2f" };
+const ETQ = { devsarg: "r/devsarg", empleos_AR: "r/empleos_AR", taquerosprogramadores: "r/taquerosprogramadores" };
+const coma = (v, d = 1) => v.toFixed(d).replace(".", ",").replace("-", "−");
+const miles = v => Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
-  diapos.forEach((d, i) => { d.querySelector(".num").textContent = `${i + 1} / ${diapos.length}`; });
+// Reemplaza marcadores de texto con datos (cifras que van en el HTML).
+(function rellenar() {
+  const a = D.anual.devsarg;
+  const valores = {
+    __TOTAL__: D.total_textos, __ENOJO_21__: a.enojo["2021"], __ENOJO_26__: a.enojo["2026"],
+    __ALEGRIA_21__: a.alegria["2021"], __ALEGRIA_26__: a.alegria["2026"],
+    __ENOJO_21_TXT__: coma(a.enojo["2021"]), __ENOJO_26_TXT__: coma(a.enojo["2026"]),
+    __ALEGRIA_21_TXT__: coma(a.alegria["2021"]), __ALEGRIA_26_TXT__: coma(a.alegria["2026"]),
+    __CORR_NIV__: D.correlaciones.niveles, __CORR_VAR_TXT__: coma(D.correlaciones.variaciones, 2),
+  };
+  let html = document.getElementById("lienzo").innerHTML;
+  for (const [k, v] of Object.entries(valores)) html = html.split(k).join(v);
+  document.getElementById("lienzo").innerHTML = html;
+})();
 
-  function escalar() {
-    const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-    lienzo.style.transform = `scale(${s})`;
+function el(tag, attrs = {}, padre) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  // Una clase CSS con fill pisa el atributo: el color explícito va como estilo.
+  if ("fill" in attrs && "class" in attrs) e.style.fill = attrs.fill;
+  if (padre) padre.appendChild(e);
+  return e;
+}
+const mesNum = m => (+m.slice(0, 4)) * 12 + (+m.slice(5, 7)) - 1;
+const textoMes = m => `${MESES[+m.slice(5, 7) - 1]} ${m.slice(0, 4)}`;
+
+/* ---------- Motor de gráficos de líneas ---------- */
+function Grafico(svg, op) {
+  const W = op.ancho || 1120, H = op.alto || 440;
+  const m = Object.assign({ t: 20, r: 150, b: 36, l: 60 }, op.margen || {});
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = "";
+  const x0 = mesNum(op.desde), x1 = mesNum(op.hasta);
+  const X = m_ => m.l + (mesNum(m_) - x0) / (x1 - x0) * (W - m.l - m.r);
+  const Y = v => H - m.b - (v - op.y0) / (op.y1 - op.y0) * (H - m.t - m.b);
+  const g = { svg, X, Y, W, H, m, series: [], capas: {} };
+  g.capas.fondo = el("g", {}, svg);
+  // grilla y eje y
+  for (const v of op.ticksY) {
+    el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: v === op.y0 ? COL.eje : COL.grilla, "stroke-width": 1 }, svg);
+    const t = el("text", { x: m.l - 12, y: Y(v) + 5, "text-anchor": "end", class: "eje-txt" }, svg);
+    t.textContent = (op.formatoY || (v => v))(v);
   }
-
-  function mostrar(i) {
-    actual = Math.max(0, Math.min(diapos.length - 1, i));
-    diapos.forEach((d, j) => d.classList.toggle("activa", j === actual));
-    const nota = diapos[actual].querySelector(".notas");
-    textoNotas.textContent = nota ? nota.textContent : "";
-    history.replaceState(null, "", `#${actual + 1}`);
+  // años
+  for (let a = Math.ceil(x0 / 12); a * 12 <= x1; a++) {
+    const xx = m.l + (a * 12 - x0) / (x1 - x0) * (W - m.l - m.r);
+    const t = el("text", { x: xx, y: H - 8, "text-anchor": "middle", class: "eje-txt" }, svg);
+    t.textContent = a;
   }
+  if (op.unidad) {
+    const t = el("text", { x: m.l, y: m.t - 18, class: "eje-txt", "text-anchor": "start" }, svg);
+    t.textContent = op.unidad;
+  }
+  // corte
+  if (op.corte !== false) {
+    const xc = X("2022-11") + (X("2022-12") - X("2022-11")) * 0.97;
+    el("line", { x1: xc, x2: xc, y1: m.t, y2: H - m.b, stroke: COL.tinta2, "stroke-width": 1.5, "stroke-dasharray": "5 5" }, svg);
+    const t = el("text", { x: xc + 8, y: m.t + 16, class: "eje-txt", fill: COL.tinta2 }, svg);
+    t.textContent = "ChatGPT";
+  }
+  g.capas.series = el("g", {}, svg);
+  g.capas.notas = el("g", {}, svg);
 
-  document.addEventListener("keydown", (e) => {
-    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); mostrar(actual + 1); }
-    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); mostrar(actual - 1); }
-    else if (e.key === "Home") mostrar(0);
-    else if (e.key === "End") mostrar(diapos.length - 1);
-    else if (e.key.toLowerCase() === "n") panel.classList.toggle("visible");
-    else if (e.key.toLowerCase() === "f") {
-      if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen();
+  g.linea = (id, datos, o = {}) => {
+    const d = datos.filter(p => p[1] !== null).map((p, i) => `${i ? "L" : "M"}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("");
+    const path = el("path", { d, class: "serie", stroke: o.color, "stroke-width": o.ancho || 3.5 }, g.capas.series);
+    if (o.guion) path.setAttribute("stroke-dasharray", o.guion);
+    const s = { id, datos, path, o, visible: false, etiqueta: null };
+    if (o.etiqueta) {
+      const u = datos.filter(p => p[1] !== null).at(-1);
+      s.etiqueta = el("text", { x: X(u[0]) + 10, y: Y(u[1]) + 6 + (o.dy || 0), class: "rotulo", fill: COL.tinta }, g.capas.notas);
+      s.etiqueta.textContent = o.etiqueta;
     }
-    else if (e.key.toLowerCase() === "p") document.body.classList.toggle("todas");
+    path.style.opacity = 0;
+    if (s.etiqueta) s.etiqueta.style.opacity = 0;
+    g.series.push(s);
+    return s;
+  };
+  g.mostrar = (s, animar, dur = 1.8) => {
+    s.visible = true;
+    const p = s.path;
+    p.style.transition = "none";
+    p.style.opacity = 1;
+    if (animar && T() > 0 && !s.o.guion) {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L;
+      p.style.strokeDashoffset = L;
+      p.getBoundingClientRect();
+      p.style.transition = `stroke-dashoffset ${dur}s cubic-bezier(.4,.1,.2,1)`;
+      p.style.strokeDashoffset = 0;
+      setTimeout(() => { p.style.strokeDasharray = ""; }, dur * 1000 + 50);
+    } else { p.style.strokeDasharray = ""; p.style.strokeDashoffset = 0; }
+    if (s.etiqueta) { s.etiqueta.style.transition = animar ? `opacity .5s ${dur * 0.8}s` : "none"; s.etiqueta.style.opacity = 1; }
+  };
+  g.ocultar = s => { s.visible = false; s.path.style.transition = "none"; s.path.style.opacity = 0; if (s.etiqueta) s.etiqueta.style.opacity = 0; };
+  g.apagar = (s, si) => { s.path.classList.toggle("apagada", si); if (s.etiqueta) s.etiqueta.classList.toggle("apagada", si); };
+  g.nota = (x, y, texto, attrs = {}) => {
+    const t = el("text", Object.assign({ x, y, class: "anotacion" }, attrs), g.capas.notas);
+    t.textContent = texto;
+    t.style.transition = `opacity calc(.5s * var(--t))`;
+    return t;
+  };
+  g.franja = (desde, hasta, color) => {
+    const r = el("rect", { x: X(desde), y: m.t, width: X(hasta) - X(desde), height: H - m.t - m.b, fill: color, opacity: 0.14 }, g.capas.fondo);
+    r.style.transition = "opacity calc(.5s * var(--t))";
+    return r;
+  };
+  // Cursor con valores
+  const cursor = el("g", { class: "tooltip", style: "pointer-events:none;opacity:0" }, svg);
+  const vl = el("line", { y1: m.t, y2: H - m.b, stroke: COL.tenue, "stroke-width": 1 }, cursor);
+  const caja = el("rect", { rx: 8, width: 10, height: 10 }, cursor);
+  const textos = el("g", {}, cursor);
+  const zona = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent" }, svg);
+  zona.addEventListener("mousemove", ev => {
+    const p = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    const visibles = g.series.filter(s => s.visible && !s.o.sinCursor);
+    if (!visibles.length) return;
+    let mejor = null, dist = 1e9;
+    for (const s of visibles) for (const q of s.datos) { const d = Math.abs(X(q[0]) - p.x); if (d < dist && q[1] !== null) { dist = d; mejor = q[0]; } }
+    const x = X(mejor);
+    vl.setAttribute("x1", x); vl.setAttribute("x2", x);
+    textos.innerHTML = "";
+    const filas = [[op.formatoMes ? op.formatoMes(mejor) : textoMes(mejor), COL.tinta2]];
+    for (const s of visibles) { const q = s.datos.find(z => z[0] === mejor); if (q && q[1] !== null) filas.push([`${s.o.nombre || s.id}: ${(op.formatoValor || (v => coma(v)))(q[1])}`, s.o.color]); }
+    filas.forEach((f, i) => { const t = el("text", { x: 14, y: 24 + i * 22 }, textos); t.textContent = f[0]; if (i) { el("circle", { cx: 6, cy: 19 + i * 22, r: 4, fill: f[1] }, textos); } });
+    const ancho = Math.max(...[...textos.querySelectorAll("text")].map(t => t.getComputedTextLength())) + 28;
+    const alto = filas.length * 22 + 14;
+    const bx = x + 14 + ancho > W ? x - 14 - ancho : x + 14;
+    caja.setAttribute("x", bx); caja.setAttribute("y", m.t + 6); caja.setAttribute("width", ancho); caja.setAttribute("height", alto);
+    textos.setAttribute("transform", `translate(${bx},${m.t + 6})`);
+    cursor.style.opacity = 1;
   });
-  document.addEventListener("click", (e) => {
-    if (document.body.classList.contains("todas") || panel.contains(e.target)) return;
-    mostrar(e.clientX > window.innerWidth / 2 ? actual + 1 : actual - 1);
-  });
-  window.addEventListener("resize", escalar);
+  zona.addEventListener("mouseleave", () => { cursor.style.opacity = 0; });
+  return g;
+}
 
-  if (new URLSearchParams(location.search).has("todas")) document.body.classList.add("todas");
-  escalar();
-  mostrar((parseInt(location.hash.slice(1), 10) || 1) - 1);
+/* ---------- Escenas ---------- */
+const escenas = {};
+
+escenas.portada = {
+  iniciar(d) {
+    const svg = d.querySelector(".fondo-svg");
+    svg.innerHTML = "";
+    const s = D.tono.series.devsarg;
+    const x0 = mesNum(s[0][0]), x1 = mesNum(s.at(-1)[0]);
+    const pts = s.map(p => [(mesNum(p[0]) - x0) / (x1 - x0) * 1280, 712 - (p[1] - 5) / 40 * 230]);
+    const path = el("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(""), fill: "none", stroke: COL.devsarg, "stroke-width": 3, "vector-effect": "non-scaling-stroke" }, svg);
+    if (T() > 0) {
+      const L = path.getTotalLength();
+      path.style.strokeDasharray = L; path.style.strokeDashoffset = L; path.getBoundingClientRect();
+      path.style.transition = "stroke-dashoffset 3.5s cubic-bezier(.4,.1,.2,1)"; path.style.strokeDashoffset = 0;
+    }
+  },
+};
+
+escenas.volumen = {
+  iniciar(d) {
+    const svg = d.querySelector("svg");
+    const datos = D.volumen.trimestres;
+    const W = 1120, H = 400, m = { t: 20, r: 20, b: 36, l: 70 };
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.innerHTML = "";
+    const max = Math.max(...datos.map(x => x[1]));
+    const y1 = Math.ceil(max / 20000) * 20000;
+    const Y = v => H - m.b - v / y1 * (H - m.t - m.b);
+    for (let v = 0; v <= y1; v += 20000) {
+      el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: v ? COL.grilla : COL.eje }, svg);
+      el("text", { x: m.l - 12, y: Y(v) + 5, "text-anchor": "end", class: "eje-txt" }, svg).textContent = v ? `${v / 1000} mil` : "0";
+    }
+    const bw = (W - m.l - m.r) / datos.length;
+    this.barras = datos.map((q, i) => {
+      const antes = q[0] <= "2022Q4" && q[0] !== "2022Q4" || q[0] === "2022Q4";
+      const pre = q[0] < "2022Q4" || q[0] === "2022Q4";
+      const r = el("rect", { x: m.l + i * bw + 3, width: bw - 6, y: Y(0), height: 0, rx: 3, fill: pre ? COL.devsarg : "#3a4a5e" }, svg);
+      r.dataset.y = Y(q[1]); r.dataset.h = Y(0) - Y(q[1]);
+      if (q[0].endsWith("Q1")) el("text", { x: m.l + i * bw + bw / 2, y: H - 8, "text-anchor": "middle", class: "eje-txt" }, svg).textContent = q[0].slice(0, 4);
+      return r;
+    });
+    const iCorte = datos.findIndex(q => q[0] === "2022Q4");
+    const xc = m.l + (iCorte + 1) * bw - 1;
+    el("line", { x1: xc, x2: xc, y1: m.t, y2: H - m.b, stroke: COL.tinta2, "stroke-width": 1.5, "stroke-dasharray": "5 5" }, svg);
+    el("text", { x: xc + 8, y: m.t + 16, class: "eje-txt", fill: COL.tinta2 }, svg).textContent = "ChatGPT";
+    this.nota = el("text", { x: m.l + 14, y: Y(max * 0.55), class: "anotacion", fill: COL.devsarg }, svg);
+    this.nota.textContent = `${coma(D.volumen.pct_antes)}% de los textos`;
+    this.nota2 = el("text", { x: m.l + 14, y: Y(max * 0.55) + 26, class: "eje-txt", fill: COL.tinta2 }, svg);
+    this.nota2.textContent = "es anterior al corte";
+    this.nota.style.opacity = this.nota2.style.opacity = 0;
+    this.nota.style.transition = this.nota2.style.transition = "opacity .5s";
+    this.barras.forEach((r, i) => {
+      r.style.transition = T() ? `y .7s ${i * 0.025}s cubic-bezier(.2,.7,.2,1), height .7s ${i * 0.025}s cubic-bezier(.2,.7,.2,1)` : "none";
+      requestAnimationFrame(() => requestAnimationFrame(() => { r.setAttribute("y", r.dataset.y); r.setAttribute("height", r.dataset.h); }));
+    });
+  },
+  paso(n) { this.nota.style.opacity = this.nota2.style.opacity = n >= 1 ? 1 : 0; },
+};
+
+escenas.tiempo = {
+  iniciar(d) {
+    const svg = d.querySelector("svg"); svg.innerHTML = "";
+    const W = 1120, x0 = mesNum("2021-01"), x1 = mesNum("2026-06");
+    const X = f => 20 + (mesNum(f.slice(0, 7)) + (+f.slice(8, 10) - 1) / 31 - x0) / (x1 - x0) * (W - 40);
+    const yl = 170;
+    el("line", { x1: 20, x2: W - 20, y1: yl, y2: yl, stroke: COL.eje, "stroke-width": 3 }, svg);
+    for (let a = 2021; a <= 2026; a++) el("text", { x: X(`${a}-01-01`), y: yl + 112, "text-anchor": "middle", class: "eje-txt" }, svg).textContent = a;
+    const color = { ia: COL.devsarg, despidos: COL.empleos_AR, macro_global: COL.amarillo, macro_ar: COL.magenta };
+    // Posiciones fijas: nivel (negativo arriba, positivo abajo) y anclaje del texto, para que no se pisen.
+    const niveles = { "-3": 52, "-2": 86, "-1": 120, "1": 226, "2": 260 };
+    const eventos = [
+      ["2021-06-29", "Copilot (preview)", "ia", -1, "middle"],
+      ["2022-03-16", "Suba de tasas Fed", "macro_global", 1, "middle"],
+      ["2022-06-21", "Copilot", "ia", -2, "middle"],
+      ["2022-11-06", "Despidos Twitter y Meta", "despidos", 2, "end"],
+      ["2022-11-30", "ChatGPT", "ia", -3, "middle"],
+      ["2023-01-19", "Despidos Google y Microsoft", "despidos", 1, "start"],
+      ["2023-03-14", "GPT-4", "ia", -1, "middle"],
+      ["2023-08-14", "Devaluación PASO", "macro_ar", 2, "middle"],
+      ["2023-12-13", "Devaluación 54%", "macro_ar", -2, "middle"],
+      ["2024-03-04", "Claude 3", "ia", -1, "middle"],
+      ["2025-04-14", "Fin del cepo", "macro_ar", -1, "middle"],
+    ];
+    eventos.forEach(([fecha, texto, tipo, nv, ancla], i) => {
+      const x = X(fecha), clave = texto === "ChatGPT", y = niveles[nv], arriba = nv < 0;
+      const g = el("g", {}, svg);
+      el("line", { x1: x, x2: x, y1: yl, y2: arriba ? y + 8 : y - 20, stroke: COL.eje, "stroke-width": 1.5 }, g);
+      el("circle", { cx: x, cy: yl, r: clave ? 11 : 7, fill: color[tipo], stroke: "#1a1a19", "stroke-width": 3 }, g);
+      const t = el("text", { x: x + (ancla === "end" ? 6 : ancla === "start" ? -6 : 0), y, "text-anchor": ancla, class: "rotulo", fill: clave ? COL.tinta : COL.tinta2, "font-size": clave ? 24 : 16 }, g);
+      t.textContent = texto;
+      g.style.opacity = 0; g.style.transform = "translateY(8px)";
+      g.style.transition = T() ? `opacity .4s ${0.25 + i * 0.22}s, transform .4s ${0.25 + i * 0.22}s` : "none";
+      requestAnimationFrame(() => requestAnimationFrame(() => { g.style.opacity = 1; g.style.transform = "none"; }));
+    });
+    const ley = [["IA", COL.devsarg], ["Despidos tech", COL.empleos_AR], ["Economía global", COL.amarillo], ["Economía argentina", COL.magenta]];
+    ley.forEach((l, i) => {
+      el("circle", { cx: 26 + i * 220, cy: 318, r: 6, fill: l[1] }, svg);
+      el("text", { x: 40 + i * 220, y: 323, class: "eje-txt" }, svg).textContent = l[0];
+    });
+  },
+};
+
+function graficoTono(svg) {
+  return Grafico(svg, { desde: "2021-01", hasta: "2026-10", y0: 0, y1: 45, ticksY: [0, 10, 20, 30, 40],
+    formatoY: v => `${v}%`, formatoValor: v => `${coma(v)}%`, alto: 420 });
+}
+
+escenas.tono = {
+  iniciar(d) {
+    const g = this.g = graficoTono(d.querySelector("svg"));
+    const t = D.tono.tendencia;
+    this.dev = g.linea("devsarg", D.tono.series.devsarg, { color: COL.devsarg, nombre: "r/devsarg" });
+    this.ta = g.linea("ta", t.antes, { color: COL.tinta, ancho: 2.5, guion: "8 6", sinCursor: true });
+    this.td = g.linea("td", t.despues, { color: COL.tinta, ancho: 2.5, guion: "8 6", sinCursor: true });
+    const ini = D.anual.devsarg.neg;
+    this.n1 = g.nota(g.X("2021-02"), g.Y(40), `Antes: +${coma(t.pendiente_antes, 2)} puntos por mes`);
+    this.n2 = g.nota(g.X("2024-03"), g.Y(24), `Después: +${coma(t.pendiente_despues, 2)} por mes`);
+    this.n0 = g.nota(g.X("2026-09") + 12, g.Y(D.tono.series.devsarg.at(-1)[1]) + 7, `${Math.round(ini["2026"])}%`);
+    this.n00 = g.nota(g.X("2021-02") - 4, g.Y(ini["2021"]) + 34, `${Math.round(ini["2021"])}%`);
+    g.mostrar(this.dev, true, 2.2);
+    this.prev = 0;
+  },
+  paso(n, animar) {
+    const g = this.g, s = n >= 1;
+    s ? (g.mostrar(this.ta, false), g.mostrar(this.td, false)) : (g.ocultar(this.ta), g.ocultar(this.td));
+    [this.n1, this.n2].forEach(x => x.style.opacity = s ? 1 : 0);
+    [this.n0, this.n00].forEach(x => x.style.opacity = s ? 0 : 1);
+    g.apagar(this.dev, s);
+  },
+};
+
+escenas.comparacion = {
+  iniciar(d) {
+    const g = this.g = graficoTono(d.querySelector("svg"));
+    this.dev = g.linea("devsarg", D.tono.series.devsarg, { color: COL.devsarg, nombre: "r/devsarg", ancho: 3 });
+    this.emp = g.linea("empleos", D.tono.series.empleos_AR, { color: COL.empleos_AR, nombre: "r/empleos_AR" });
+    this.taq = g.linea("taqueros", D.tono.series.taquerosprogramadores, { color: COL.taquerosprogramadores, nombre: "r/taquerosprogramadores" });
+    g.mostrar(this.dev, false);
+    g.mostrar(this.emp, true, 2);
+  },
+  paso(n) { n >= 1 ? this.g.mostrar(this.taq, true, 1.4) : this.g.ocultar(this.taq); },
+};
+
+escenas.emociones = {
+  iniciar(d) {
+    const max = 16;
+    d.querySelectorAll(".llenado").forEach((b, i) => {
+      b.style.width = "0";
+      setTimeout(() => { b.style.width = `${parseFloat(b.dataset.ancho) / max * 100}%`; }, 150 + i * 120);
+    });
+  },
+};
+
+escenas.ia = {
+  iniciar(d) {
+    const g = this.g = Grafico(d.querySelector("svg"), { desde: "2021-01", hasta: "2026-10", y0: 0, y1: 14, ticksY: [0, 2, 4, 6, 8, 10, 12, 14],
+      formatoY: v => `${v}%`, formatoValor: v => `${coma(v)}%`, alto: 420, formatoMes: m => `trimestre de ${textoMes(m)}` });
+    this.f1 = g.franja("2022-12", "2024-12", COL.tinta); this.f1.style.opacity = 0;
+    this.f2 = g.franja("2025-01", "2026-10", COL.devsarg); this.f2.style.opacity = 0;
+    this.n1 = g.nota(g.X("2023-01") + 8, g.Y(5.6), "1. ChatGPT"); this.n1b = g.nota(g.X("2023-01") + 8, g.Y(5.6) + 24, "de 1% a 2%", { class: "eje-txt", fill: COL.tinta2 });
+    this.n2 = g.nota(g.X("2025-01") + 8, g.Y(13.2), "2. Herramientas"); this.n2b = g.nota(g.X("2025-01") + 8, g.Y(13.2) + 24, "para programar", { class: "eje-txt", fill: COL.tinta2 });
+    this.n3 = g.nota(g.X("2026-09") + 12, g.Y(12.4) + 6, "1 de cada 8");
+    [this.n1, this.n1b, this.n2, this.n2b, this.n3].forEach(x => x.style.opacity = 0);
+    this.s = ["devsarg", "empleos_AR", "taquerosprogramadores"].map(k => g.linea(k, D.ia.series[k], { color: COL[k], nombre: ETQ[k] }));
+    this.s.forEach((s, i) => setTimeout(() => g.mostrar(s, true, 2), i * 250));
+  },
+  paso(n) {
+    this.f1.style.opacity = n >= 1 ? 0.1 : 0;
+    [this.n1, this.n1b].forEach(x => x.style.opacity = n >= 1 ? 1 : 0);
+    this.f2.style.opacity = n >= 2 ? 0.16 : 0;
+    [this.n2, this.n2b, this.n3].forEach(x => x.style.opacity = n >= 2 ? 1 : 0);
+  },
+};
+
+escenas.herramientas = {
+  iniciar(d) {
+    const g = Grafico(d.querySelector("svg"), { desde: "2023-01", hasta: "2026-10", y0: 0, y1: 100, ticksY: [0, 25, 50, 75, 100],
+      formatoY: v => `${v}%`, formatoValor: v => `${Math.round(v)}%`, alto: 440, corte: false, margen: { r: 120 }, formatoMes: m => `trimestre de ${textoMes(m)}` });
+    const h = D.ia.herramientas;
+    ["Copilot", "Cursor", "Gemini"].forEach(k => g.mostrar(g.linea(k, h[k], { color: "#6a6964", ancho: 2, nombre: k }), true, 1.6));
+    const fin = h.Copilot.at(-1)[0];
+    g.nota(g.X(fin) + 10, g.Y(5) + 6, "Copilot, Cursor y Gemini", { class: "eje-txt", fill: COL.tinta2 });
+    const chat = g.linea("ChatGPT", h.ChatGPT, { color: COL.violeta, ancho: 4, nombre: "ChatGPT", etiqueta: "ChatGPT" });
+    const claude = g.linea("Claude", h.Claude, { color: COL.amarillo, ancho: 4, nombre: "Claude", etiqueta: "Claude" });
+    g.mostrar(chat, true, 2.2); setTimeout(() => g.mostrar(claude, true, 2.2), 500);
+  },
+};
+
+escenas.temas = {
+  iniciar(d) {
+    const svg = d.querySelector("svg"); svg.innerHTML = "";
+    const datos = D.temas, W = 1120, H = 430, m = { t: 30, r: 40, b: 30, l: 380 };
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const max = 16, X = v => m.l + v / max * (W - m.l - m.r);
+    const fh = (H - m.t - m.b) / datos.length;
+    for (const v of [0, 5, 10, 15]) {
+      el("line", { x1: X(v), x2: X(v), y1: m.t - 10, y2: H - m.b, stroke: v ? COL.grilla : COL.eje }, svg);
+      el("text", { x: X(v), y: H - 6, "text-anchor": "middle", class: "eje-txt" }, svg).textContent = `${v}%`;
+    }
+    el("circle", { cx: W - 300, cy: 10, r: 7, fill: COL.tenue }, svg); el("text", { x: W - 288, y: 15, class: "eje-txt" }, svg).textContent = "antes";
+    el("circle", { cx: W - 200, cy: 10, r: 7, fill: COL.devsarg }, svg); el("text", { x: W - 188, y: 15, class: "eje-txt" }, svg).textContent = "después";
+    this.items = datos.map((t, i) => {
+      const y = m.t + fh * i + fh / 2;
+      el("text", { x: m.l - 64, y: y + 6, "text-anchor": "end", class: "rotulo", fill: COL.tinta }, svg).textContent = t.tema;
+      const linea = el("line", { x1: X(t.antes), x2: X(t.antes), y1: y, y2: y, stroke: t.despues > t.antes ? COL.devsarg : COL.empleos_AR, "stroke-width": 4, "stroke-linecap": "round" }, svg);
+      el("circle", { cx: X(t.antes), cy: y, r: 9, fill: COL.tenue }, svg);
+      const punto = el("circle", { cx: X(t.antes), cy: y, r: 10, fill: COL.devsarg, opacity: 0 }, svg);
+      const valor = el("text", { x: X(t.antes) + (t.despues > t.antes ? -16 : 16), y: y + 6, class: "eje-txt", fill: COL.tinta2, "text-anchor": t.despues > t.antes ? "end" : "start" }, svg);
+      valor.textContent = `${coma(t.antes)}%`;
+      const valor2 = el("text", { x: X(t.despues) + (t.despues > t.antes ? 16 : -16), y: y + 6, class: "rotulo", fill: COL.tinta, "text-anchor": t.despues > t.antes ? "start" : "end", opacity: 0 }, svg);
+      valor2.textContent = `${coma(t.despues)}%`;
+      return { t, linea, punto, valor2, X };
+    });
+  },
+  paso(n) {
+    this.items.forEach((it, i) => {
+      const { t, linea, punto, valor2, X } = it, dur = T() ? 0.9 : 0, delay = T() ? i * 0.08 : 0;
+      punto.style.transition = linea.style.transition = valor2.style.transition = `all ${dur}s ${delay}s cubic-bezier(.3,.7,.2,1)`;
+      punto.setAttribute("opacity", n >= 1 ? 1 : 0);
+      punto.setAttribute("cx", n >= 1 ? X(t.despues) : X(t.antes));
+      punto.style.cx = n >= 1 ? X(t.despues) : X(t.antes);
+      linea.setAttribute("x2", n >= 1 ? X(t.despues) : X(t.antes));
+      linea.style.x2 = n >= 1 ? X(t.despues) : X(t.antes);
+      valor2.setAttribute("opacity", n >= 1 ? 1 : 0);
+    });
+  },
+};
+
+escenas.vocab = {
+  iniciar(d) {
+    const caja = d.querySelector(".palabras");
+    caja.innerHTML = "";
+    this.d = d;
+    for (const p of Object.keys(D.vocab)) {
+      const b = document.createElement("button");
+      b.textContent = p; b.setAttribute("aria-pressed", p === "ia");
+      b.addEventListener("click", ev => { ev.stopPropagation(); this.elegir(p, true); });
+      caja.appendChild(b);
+    }
+    this.palabra = "ia"; this.n = 0;
+    this.dibujar(true);
+  },
+  elegir(p) {
+    this.palabra = p; this.n = 1;
+    this.d.querySelectorAll(".palabras button").forEach(b => b.setAttribute("aria-pressed", b.textContent === p));
+    this.dibujar(true);
+  },
+  dibujar(animar) {
+    const v = D.vocab[this.palabra], d = this.d;
+    const antes = new Set(v.antes);
+    const llenar = (periodo, lista, mostrar, retraso) => {
+      const c = d.querySelector(`[data-periodo="${periodo}"]`); c.innerHTML = "";
+      lista.forEach((w, i) => {
+        const s = document.createElement("span");
+        s.className = "chip" + (periodo === "despues" && !antes.has(w) ? " nuevo" : "");
+        s.textContent = w; c.appendChild(s);
+        if (mostrar && animar && T()) setTimeout(() => s.classList.add("on"), retraso + i * 70);
+        else if (mostrar) s.classList.add("on");
+      });
+    };
+    llenar("antes", v.antes, true, 100);
+    llenar("despues", v.despues, this.n >= 1, 150);
+    const entre = d.querySelector('[data-medida="entre"]'), base = d.querySelector('[data-medida="base"]'), ver = d.querySelector('[data-medida="veredicto"]');
+    const vis = this.n >= 1;
+    entre.textContent = vis ? `${Math.round(v.entre * 100)}%` : "–";
+    base.textContent = vis ? `${Math.round(v.base * 100)}%` : "–";
+    ver.textContent = vis ? (v.cambia ? "Cambió de significado" : "Sin cambio medible") : "";
+    ver.className = "veredicto " + (v.cambia ? "si" : "no");
+    ver.style.visibility = vis ? "visible" : "hidden";
+  },
+  paso(n) { this.n = n; this.dibujar(true); },
+};
+
+escenas.mercado = {
+  iniciar(d) {
+    const g = this.g = Grafico(d.querySelector("svg"), { desde: "2019-01", hasta: "2026-10", y0: 0, y1: 200, ticksY: [0, 50, 100, 150, 200],
+      formatoValor: v => coma(v, 0), alto: 420, unidad: "índice, noviembre de 2022 = 100", margen: { t: 40 } });
+    el("line", { x1: g.m.l, x2: g.W - g.m.r, y1: g.Y(100), y2: g.Y(100), stroke: COL.tenue, "stroke-width": 1 }, g.capas.fondo);
+    this.fr = g.franja("2022-02", "2022-11", COL.magenta); this.fr.style.opacity = 0;
+    this.n1 = g.nota(g.X("2022-02") - 12, g.Y(18), "−36% antes del corte", { "text-anchor": "end" });
+    this.ind = g.linea("Indeed", D.mercado.indeed, { color: COL.magenta, nombre: "Indeed" });
+    this.hn = g.linea("Hacker News", D.mercado.hn, { color: COL.violeta, nombre: "Hacker News" });
+    this.sipa = g.linea("SIPA", D.mercado.sipa, { color: COL.verde, nombre: "SIPA", ancho: 4.5, etiqueta: "+7%" });
+    this.n1.style.opacity = 0;
+    g.mostrar(this.ind, true, 2.2); setTimeout(() => g.mostrar(this.hn, true, 2.2), 300);
+  },
+  paso(n) {
+    this.fr.style.opacity = n >= 1 ? 0.18 : 0; this.n1.style.opacity = n >= 1 ? 1 : 0;
+    n >= 2 ? this.g.mostrar(this.sipa, true, 1.6) : this.g.ocultar(this.sipa);
+    this.g.apagar(this.ind, n >= 2); this.g.apagar(this.hn, n >= 2);
+  },
+};
+
+/* ---------- Navegación ---------- */
+const diapos = [...document.querySelectorAll(".diapo")];
+const lienzo = document.getElementById("lienzo");
+const panel = document.getElementById("panelNotas"), textoNotas = document.getElementById("textoNotas");
+const avance = document.getElementById("avance");
+let actual = 0, paso = 0;
+diapos.forEach((d, i) => { const n = document.createElement("span"); n.className = "num"; n.textContent = `${i + 1} / ${diapos.length}`; d.appendChild(n); });
+
+const pasosDe = d => Math.max(+(d.dataset.pasos || 0), ...[...d.querySelectorAll("[data-paso]")].map(e => +e.dataset.paso));
+
+function contar(e, animar) {
+  const hasta = parseFloat(e.dataset.hasta), desde = parseFloat(e.dataset.desde || 0), dec = +(e.dataset.decimales || 0);
+  const fmt = v => e.dataset.formato === "miles" ? miles(v) : coma(v, dec);
+  if (!animar || !T()) { e.textContent = fmt(hasta); return; }
+  const t0 = performance.now(), dur = 1400;
+  const f = t => { const k = Math.min(1, (t - t0) / dur), c = 1 - Math.pow(1 - k, 3); e.textContent = fmt(desde + (hasta - desde) * c); if (k < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+}
+
+function aplicarPaso(d, n, animar) {
+  d.querySelectorAll("[data-paso]").forEach(e => e.classList.toggle("visible", +e.dataset.paso <= n));
+  d.querySelectorAll("[data-ocultar]").forEach(e => e.classList.toggle("oculto", +e.dataset.ocultar <= n));
+  // escalonado para elementos del paso 0 con varios hermanos
+  const esc = escenas[d.dataset.escena];
+  if (esc && esc.paso) esc.paso(n, animar);
+}
+
+function mostrar(i, n = 0, animar = true) {
+  i = Math.max(0, Math.min(diapos.length - 1, i));
+  const cambio = i !== actual || !diapos[i].classList.contains("activa");
+  actual = i; paso = n;
+  const d = diapos[i];
+  if (cambio) {
+    diapos.forEach((x, j) => x.classList.toggle("activa", j === i));
+    d.querySelectorAll("[data-paso]").forEach(e => e.classList.remove("visible"));
+    // los elementos del paso 0 aparecen escalonados
+    d.querySelectorAll('[data-paso="0"]').forEach((e, k) => { e.style.transitionDelay = T() ? `${0.15 + k * 0.12}s` : "0s"; });
+    const esc = escenas[d.dataset.escena];
+    if (esc && esc.iniciar) esc.iniciar(d);
+    d.querySelectorAll(".contador").forEach(e => contar(e, animar));
+    requestAnimationFrame(() => requestAnimationFrame(() => aplicarPaso(d, n, animar)));
+  } else aplicarPaso(d, n, animar);
+  const nota = d.querySelector(".notas");
+  textoNotas.textContent = nota ? nota.textContent : "";
+  avance.style.width = `${(i + 1) / diapos.length * 100}%`;
+  history.replaceState(null, "", `#${i + 1}`);
+}
+
+function siguiente() { paso < pasosDe(diapos[actual]) ? mostrar(actual, paso + 1) : actual < diapos.length - 1 && mostrar(actual + 1, 0); }
+function anterior() { paso > 0 ? mostrar(actual, paso - 1) : actual > 0 && mostrar(actual - 1, pasosDe(diapos[actual - 1]), false); }
+
+document.addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); siguiente(); }
+  else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); anterior(); }
+  else if (e.key === "Home") mostrar(0);
+  else if (e.key === "End") mostrar(diapos.length - 1);
+  else if (e.key.toLowerCase() === "n") panel.classList.toggle("visible");
+  else if (e.key.toLowerCase() === "f") document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+  else if (e.key.toLowerCase() === "p") verTodas();
+});
+document.addEventListener("click", e => {
+  if (document.body.classList.contains("todas") || panel.contains(e.target) || e.target.closest("button, .grafico")) return;
+  e.clientX > window.innerWidth / 2 ? siguiente() : anterior();
+});
+
+function verTodas() {
+  const on = document.body.classList.toggle("todas");
+  if (on) diapos.forEach(d => { const esc = escenas[d.dataset.escena]; if (esc && esc.iniciar) esc.iniciar(d); d.querySelectorAll(".contador").forEach(e => contar(e, false)); aplicarPaso(d, pasosDe(d), false); });
+  else mostrar(actual, paso, false);
+}
+
+function escalar() { lienzo.style.transform = `scale(${Math.min(innerWidth / 1280, innerHeight / 720)})`; }
+addEventListener("resize", escalar);
+escalar();
+if (new URLSearchParams(location.search).has("todas")) { document.documentElement.style.setProperty("--t", 0); verTodas(); }
+else mostrar((parseInt(location.hash.slice(1), 10) || 1) - 1, +(new URLSearchParams(location.search).get("paso") || 0), true);
 </script>
 </body>
 </html>

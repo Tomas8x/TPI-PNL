@@ -35,7 +35,7 @@ Resumen de los análisis de `04_sentimiento.md` a `09_cruce.md`. Cada número sa
 
 ## Guion para la exposición (7 minutos)
 
-La presentación armada está en `presentacion/presentacion_completa.html` (8 diapositivas, con notas del orador en la tecla N). Este guion es la versión original, de siete diapositivas de ~1 minuto. Las figuras están en `reports/figures/`; las versiones para proyectar son las `pres_*.png`.
+La presentación armada está en `presentacion/presentacion.html` (16 diapositivas interactivas, con notas del orador en la tecla N). Este guion es la versión original, de siete diapositivas de ~1 minuto. Las figuras están en `reports/figures/`; las versiones para proyectar son las `pres_*.png`.
 
 | # | Diapositiva | Mensaje | Figura | Tiempo |
 |---|---|---|---|---|
