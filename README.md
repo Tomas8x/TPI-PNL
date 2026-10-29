@@ -26,7 +26,7 @@ docs/             documentación de cada etapa
   09_cruce.md          tono contra mercado (hipótesis B)
   10_conclusiones.md   resultado por hipótesis y guion de la exposición
   eventos.csv          línea de tiempo de eventos que se superponen con el corte
-presentacion/     exposición en HTML (abrir presentacion_completa.html en el navegador)
+presentacion/     exposición en HTML interactiva (abrir presentacion.html en el navegador)
 reports/figures/  gráficos
 reports/tablas/   tablas de resultados (CSV)
 reports/modelos/  centroides de los temas de BERTopic (fijan los temas entre corridas)
@@ -66,9 +66,14 @@ Consolidación y análisis, en este orden:
 .venv/Scripts/python scripts/analisis_mercado.py      # ~1 min
 .venv/Scripts/python scripts/analisis_cruce.py        # segundos
 .venv/Scripts/python scripts/figuras_presentacion.py  # figuras pres_*.png para la exposición
-.venv/Scripts/python scripts/armar_presentacion.py    # presentacion_completa.html con las figuras incrustadas
+.venv/Scripts/python scripts/armar_presentacion.py    # presentacion/presentacion.html (interactiva)
 ```
 
 ## Presentación
 
-`presentacion/presentacion_completa.html` es un solo archivo que se abre en cualquier navegador. Flechas o clic para avanzar, `N` muestra las notas del orador, `F` pantalla completa y `P` muestra todas las diapositivas juntas (para imprimir a PDF con Ctrl+P). `presentacion/presentacion.html` es la fuente, con las figuras enlazadas: después de editarla, correr `armar_presentacion.py`.
+`presentacion/presentacion.html` es un solo archivo, sin dependencias, que se abre en cualquier navegador. Los gráficos se dibujan en el navegador a partir de los datos del análisis: las líneas se trazan solas y al pasar el mouse se ve el valor de cada mes. En la diapositiva de vocabulario se puede elegir la palabra.
+
+- Flechas, espacio o clic: avanzar. Varias diapositivas se arman en pasos.
+- `N`: notas del orador. `F`: pantalla completa. `P`: todas las diapositivas juntas (para imprimir a PDF con Ctrl+P).
+
+La fuente es `presentacion/plantilla.html`. Después de editarla, o si cambian los datos, correr `.venv/Scripts/python scripts/armar_presentacion.py`, que inserta los datos y genera `presentacion.html`.
