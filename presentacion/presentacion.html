@@ -7,21 +7,21 @@
 <!-- Fuente: presentacion/plantilla.html. Generado con scripts/armar_presentacion.py: no editar presentacion.html a mano. -->
 <style>
   :root {
-    --fondo: #1a1a19;
-    --plano: #0d0d0d;
-    --tarjeta: #232322;
-    --tinta: #f0efec;
-    --tinta-2: #c3c2b7;
+    --fondo: #fcfcfb;
+    --plano: #e4e3de;
+    --tarjeta: #f1f0ec;
+    --tinta: #0b0b0b;
+    --tinta-2: #52514e;
     --tenue: #898781;
-    --grilla: #2c2c2a;
-    --eje: #383835;
-    --devsarg: #3987e5;
-    --empleos: #d95926;
-    --taqueros: #199e70;
-    --amarillo: #c98500;
-    --magenta: #d55181;
-    --violeta: #9085e9;
-    --verde: #2f9e2f;
+    --grilla: #e1e0d9;
+    --eje: #c3c2b7;
+    --devsarg: #2a78d6;
+    --empleos: #eb6834;
+    --taqueros: #1baf7a;
+    --amarillo: #eda100;
+    --magenta: #e87ba4;
+    --violeta: #6250d6;
+    --verde: #008300;
     --fuente: "Segoe UI", system-ui, -apple-system, sans-serif;
     --t: 1;
   }
@@ -65,7 +65,7 @@
   .anotacion { font-size: 19px; font-weight: 700; fill: var(--tinta); }
   .serie { fill: none; stroke-linejoin: round; stroke-linecap: round; }
   .apagada { opacity: .25; transition: opacity calc(.6s * var(--t)); }
-  .tooltip rect { fill: #0d0d0d; stroke: var(--eje); }
+  .tooltip rect { fill: #ffffff; stroke: var(--eje); }
   .tooltip text { font-size: 15px; fill: var(--tinta); }
   .leyenda { display: flex; gap: 22px; font-size: 16px; color: var(--tinta-2); margin-top: 10px; }
   .leyenda span { display: inline-flex; align-items: center; gap: 8px; }
@@ -116,12 +116,12 @@
   .chip { font-size: 24px; padding: 8px 18px; border-radius: 999px; background: var(--tarjeta); color: var(--tinta-2);
           opacity: 0; transform: scale(.8); transition: opacity calc(.35s * var(--t)), transform calc(.35s * var(--t)); }
   .chip.on { opacity: 1; transform: none; }
-  .chip.nuevo { background: #1f3a5c; color: #dbe9fb; }
+  .chip.nuevo { background: #dce9f9; color: #174a8a; }
   .medidor { display: flex; gap: 40px; align-items: flex-end; margin-top: 6px; }
   .medidor .valor { font-size: 52px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
   .medidor .etq { font-size: 16px; color: var(--tinta-2); margin-top: 6px; max-width: 260px; }
   .veredicto { font-size: 18px; font-weight: 600; padding: 6px 14px; border-radius: 999px; display: inline-block; }
-  .veredicto.si { background: #1f3a5c; color: #dbe9fb; }
+  .veredicto.si { background: #dce9f9; color: #174a8a; }
   .veredicto.no { background: var(--tarjeta); color: var(--tinta-2); }
 
   /* Conclusión */
@@ -131,14 +131,34 @@
   .hip b { font-size: 22px; display: block; }
   .hip span { font-size: 17px; color: var(--tinta-2); }
   .estado { font-size: 16px; font-weight: 700; padding: 6px 12px; border-radius: 999px; text-align: center; }
-  .estado.parcial { background: #3a2f12; color: #fab219; }
-  .estado.no { background: #3a1a1a; color: #f08a8a; }
+  .estado.parcial { background: #fbefd0; color: #7a4f00; }
+  .estado.no { background: #fbe1e0; color: #a1302e; }
+
+  /* Contexto e hipótesis */
+  .tecnicas.tres { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
+  .hip.sin-estado { grid-template-columns: 70px 1fr; padding: 22px 28px; }
+  .hip.sin-estado .letra { color: var(--devsarg); font-size: 36px; }
+  .hip.sin-estado b { font-size: 26px; margin-bottom: 4px; }
+  .hip.sin-estado span { font-size: 19px; }
+
+  /* Código */
+  pre.codigo { margin: 26px 0 0; background: #f3f2ee; border: 1px solid var(--grilla); border-radius: 14px; padding: 20px 26px;
+    font: 16px/1.55 "Cascadia Mono", Consolas, "Courier New", monospace; color: var(--tinta); white-space: pre; overflow: hidden; }
+  .c-kw { color: #6250d6; font-weight: 600; }
+  .c-str { color: #007a33; }
+  .c-com { color: #898781; font-style: italic; }
+  .c-num { color: #c25400; }
+  .c-dec { color: #2a78d6; }
+  .claves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 28px; }
+  .clave { border-left: 4px solid var(--devsarg); padding: 2px 0 2px 18px; }
+  .clave b { display: block; font-size: 21px; margin-bottom: 4px; }
+  .clave span { font-size: 17px; color: var(--tinta-2); line-height: 1.4; }
 
   .cierre h1 { font-size: 72px; max-width: 1080px; }
 
   .notas { display: none; }
   /* Notas y ayuda */
-  .panel-notas { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36%; overflow: auto; background: rgba(13,13,13,.97);
+  .panel-notas { position: fixed; left: 0; right: 0; bottom: 0; max-height: 36%; overflow: auto; background: rgba(252,252,251,.97);
     color: var(--tinta); font-size: 18px; line-height: 1.5; padding: 16px 28px 20px; display: none; border-top: 1px solid var(--eje); z-index: 5; }
   .panel-notas.visible { display: block; }
   .panel-notas small { color: var(--tenue); display: block; margin-bottom: 6px; }
@@ -177,7 +197,33 @@
   <aside class="notas">Presentarnos. La pregunta es si la llegada de ChatGPT, el 30 de noviembre de 2022, cambió cómo se habla del trabajo IT en Reddit. Spoiler: cambió, pero no cuando esperábamos.</aside>
 </section>
 
-<!-- 2. Corpus -->
+<!-- 2. Contexto -->
+<section class="diapo">
+  <p class="kicker">Por qué preguntarlo</p>
+  <h2>Desde fines de 2022 se habla de una crisis del empleo IT</h2>
+  <div class="tecnicas tres">
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#eb6834" stroke-width="3" stroke-linecap="round"><path d="M6 12l12 12 8-8 12 14"/><path d="M30 30h8v-8"/></svg><b>Despidos</b><span>en las grandes empresas de tecnología, desde noviembre de 2022</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#eda100" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="15" r="7"/><path d="M9 38c2-8 8-12 13-12s11 4 13 12"/></svg><b>Menos juniors</b><span>cuesta más conseguir el primer trabajo en IT</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#2a78d6" stroke-width="3" stroke-linecap="round"><path d="M15 13L6 22l9 9M29 13l9 9-9 9M25 9l-6 26"/></svg><b>IA que programa</b><span>ChatGPT sale el 30 de noviembre de 2022 y después llegan las herramientas que escriben código</span></div>
+  </div>
+  <p class="bajada" data-paso="0" style="margin-top:44px">¿Se nota en cómo habla la gente que trabaja o quiere trabajar en IT? Reddit guarda esa conversación: es espontánea, pública y tiene fecha.</p>
+  <aside class="notas">Desde fines de 2022 se habla de una crisis del empleo en tecnología: despidos, menos búsquedas junior y herramientas de IA que escriben código. Todo coincide con la salida de ChatGPT. Nos preguntamos si eso se nota en lo que escribe la gente, y elegimos Reddit porque la conversación es espontánea, pública y queda con fecha.</aside>
+</section>
+
+<!-- 3. Hipótesis -->
+<section class="diapo">
+  <p class="kicker">Lo que esperábamos</p>
+  <h2>Tres hipótesis que se pueden probar por separado</h2>
+  <div class="hipotesis">
+    <div class="hip sin-estado" data-paso="0"><div class="letra">A</div><div><b>Tono y temas</b><span>Después de ChatGPT la conversación es más negativa. Se habla más de despidos, de buscar trabajo y de IA, y menos de sueldos.</span></div></div>
+    <div class="hip sin-estado" data-paso="0"><div class="letra">B</div><div><b>Mercado</b><span>El tono acompaña a las ofertas. Cuando caen los avisos de trabajo, la conversación se vuelve más negativa.</span></div></div>
+    <div class="hip sin-estado" data-paso="0"><div class="letra">C</div><div><b>Vocabulario</b><span>"Trabajo", "junior" y "empresa" aparecen junto a palabras distintas antes y después del corte.</span></div></div>
+  </div>
+  <p class="pie">Corte: 30 de noviembre de 2022, salida de ChatGPT. Hipótesis tal como las presentamos en la propuesta.</p>
+  <aside class="notas">La A dice que la conversación se volvió más negativa y cambió de tema. La B, que el tono acompaña al mercado. La C, que palabras como "trabajo", "junior" o "empresa" empezaron a usarse con otro sentido.</aside>
+</section>
+
+<!-- 4. Corpus -->
 <section class="diapo">
   <p class="kicker">El corpus</p>
   <div class="centro">
@@ -208,15 +254,39 @@
   <p class="kicker">Qué hicimos</p>
   <h2>Cuatro formas de leer 1,9 millones de textos</h2>
   <div class="tecnicas">
-    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#3987e5" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="18"/><path d="M14 28c4-5 12-5 16 0"/><circle cx="16" cy="17" r="1.5" fill="#3987e5"/><circle cx="28" cy="17" r="1.5" fill="#3987e5"/></svg><b>Tono</b><span>sentimiento y emociones con un modelo entrenado en español (RoBERTuito)</span></div>
-    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#c98500" stroke-width="3" stroke-linecap="round"><rect x="6" y="8" width="14" height="12" rx="3"/><rect x="24" y="8" width="14" height="12" rx="3"/><rect x="6" y="24" width="14" height="12" rx="3"/><rect x="24" y="24" width="14" height="12" rx="3"/></svg><b>Temas</b><span>diccionarios, TF-IDF y agrupamiento automático (BERTopic)</span></div>
-    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#d55181" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="5"/><circle cx="8" cy="10" r="3"/><circle cx="36" cy="12" r="3"/><circle cx="10" cy="35" r="3"/><circle cx="35" cy="34" r="3"/><path d="M18 18l-8-6M26 19l8-5M18 26l-6 7M26 26l7 6"/></svg><b>Vocabulario</b><span>word2vec antes y después: con qué palabras aparece cada palabra</span></div>
-    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#199e70" stroke-width="3" stroke-linecap="round"><path d="M8 12h28M8 22h18M8 32h24"/><circle cx="34" cy="22" r="4"/></svg><b>Actores</b><span>entidades nombradas: empresas, tecnologías y herramientas de IA</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#2a78d6" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="18"/><path d="M14 28c4-5 12-5 16 0"/><circle cx="16" cy="17" r="1.5" fill="#2a78d6"/><circle cx="28" cy="17" r="1.5" fill="#2a78d6"/></svg><b>Tono</b><span>sentimiento y emociones con un modelo entrenado en español (RoBERTuito)</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#eda100" stroke-width="3" stroke-linecap="round"><rect x="6" y="8" width="14" height="12" rx="3"/><rect x="24" y="8" width="14" height="12" rx="3"/><rect x="6" y="24" width="14" height="12" rx="3"/><rect x="24" y="24" width="14" height="12" rx="3"/></svg><b>Temas</b><span>diccionarios, TF-IDF y agrupamiento automático (BERTopic)</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#e87ba4" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="5"/><circle cx="8" cy="10" r="3"/><circle cx="36" cy="12" r="3"/><circle cx="10" cy="35" r="3"/><circle cx="35" cy="34" r="3"/><path d="M18 18l-8-6M26 19l8-5M18 26l-6 7M26 26l7 6"/></svg><b>Vocabulario</b><span>word2vec antes y después: con qué palabras aparece cada palabra</span></div>
+    <div class="tecnica" data-paso="0"><svg viewBox="0 0 44 44" fill="none" stroke="#1baf7a" stroke-width="3" stroke-linecap="round"><path d="M8 12h28M8 22h18M8 32h24"/><circle cx="34" cy="22" r="4"/></svg><b>Actores</b><span>entidades nombradas: empresas, tecnologías y herramientas de IA</span></div>
   </div>
   <aside class="notas">Cuatro técnicas del programa. Para el tono usamos un modelo de transformers entrenado con texto informal en español. Para los temas, diccionarios validados a mano, TF-IDF y BERTopic. Para el vocabulario, word2vec. Para los actores, NER más un diccionario.</aside>
 </section>
 
-<!-- 5. Línea de tiempo -->
+<!-- Código: sentimiento -->
+<section class="diapo">
+  <p class="kicker">Cómo lo hicimos · scripts/sentimiento.py</p>
+  <h2>Clasificamos los 1,9 millones de textos, sin muestrear</h2>
+  <pre class="codigo">@torch.inference_mode()
+def clasificar(textos, tok, modelo):
+    orden = sorted(range(len(textos)), key=lambda i: len(textos[i]))
+    probs = [None] * len(textos)
+    for b in range(0, len(orden), LOTE):
+        idx = orden[b:b + LOTE]
+        enc = tok([textos[i] for i in idx], truncation=True, max_length=128,
+                  padding=True, return_tensors="pt").to("cuda")
+        p = torch.softmax(modelo(**enc).logits.float(), dim=-1).cpu().numpy()
+        for i, fila in zip(idx, p):
+            probs[i] = fila
+    return probs</pre>
+  <div class="claves">
+    <div class="clave" data-paso="0"><b>Dos modelos</b><span>RoBERTuito de pysentimiento, entrenado con tuits en español: sentimiento y emociones</span></div>
+    <div class="clave" data-paso="0"><b>En la placa de video</b><span>lotes de 256 textos ordenados por largo, para no procesar relleno</span></div>
+    <div class="clave" data-paso="0"><b>Validado a mano</b><span>60 textos revisados: el modelo coincide en 49 (82%)</span></div>
+  </div>
+  <aside class="notas">Esta es la función que clasifica. Pasamos todos los textos por el modelo en la placa de video, de a 256, ordenados por largo. Revisamos 60 textos a mano y el modelo coincidió en el 82%.</aside>
+</section>
+
+<!-- Línea de tiempo -->
 <section class="diapo" data-escena="tiempo">
   <p class="kicker">Contexto</p>
   <h2>ChatGPT no llegó solo</h2>
@@ -293,7 +363,26 @@
   <aside class="notas">Qué herramienta se nombra. ChatGPT tenía el 92% de las menciones en 2023. En 2026 Claude lo pasó. Es otra señal de que la conversación cambió con las herramientas para programar, no con el chat.</aside>
 </section>
 
-<!-- 11. Temas -->
+<!-- Código: diccionario de actores -->
+<section class="diapo">
+  <p class="kicker">Cómo lo hicimos · scripts/analisis_entidades.py</p>
+  <h2>Un diccionario con las variantes de cada herramienta</h2>
+  <pre class="codigo">ACTORES = [
+    # Herramientas de IA
+    ("ChatGPT/OpenAI", "ia_herramienta", r"chat\s?-?gpt|\bgpt\b|\bgpt-?[345]\w*|openai|open ai"),
+    ("Copilot", "ia_herramienta", r"copilot"),
+    ("Claude", "ia_herramienta", r"\bclaude\b|anthropic"),
+    ("Cursor", "ia_herramienta", r"\bcursor\b"),
+    ("Gemini/Bard", "ia_herramienta", r"\bgemini\b|\bbard\b"),</pre>
+  <div class="claves">
+    <div class="clave" data-paso="0"><b>NER primero</b><span>spaCy encuentra empresas y lugares, pero en este corpus confunde muchas herramientas</span></div>
+    <div class="clave" data-paso="0"><b>Expresiones regulares</b><span>cada actor tiene un patrón con sus variantes: "chat gpt", "gpt-4", "openai"</span></div>
+    <div class="clave" data-paso="0"><b>Por trimestre</b><span>contamos menciones en los tres subreddits y la parte de cada herramienta</span></div>
+  </div>
+  <aside class="notas">Para contar menciones armamos un diccionario con las formas en que la gente nombra cada herramienta. Con eso vemos que en 2023 casi todo era ChatGPT y que en 2026 Claude ya se nombra más.</aside>
+</section>
+
+<!-- Temas -->
 <section class="diapo" data-escena="temas" data-pasos="1">
   <p class="kicker">Hipótesis A · Temas</p>
   <div class="apila">
@@ -305,7 +394,30 @@
   <aside class="notas">Temas que encontró BERTopic, antes del corte. [Avanzar] Después: cae aprender a programar, que era el tema principal, y caen las tecnologías puntuales. Suben sueldos, entrevistas e IA. La hipótesis decía que se iba a hablar menos de sueldos: pasó lo contrario.</aside>
 </section>
 
-<!-- 12. Vocabulario -->
+<!-- Código: vocabulario -->
+<section class="diapo">
+  <p class="kicker">Cómo lo hicimos · scripts/analisis_vocabulario.py</p>
+  <h2>¿Cambió el significado o es ruido?</h2>
+  <pre class="codigo">def entrenar(textos, semilla):
+    return Word2Vec(sentences=textos, seed=semilla, **PARAMS_W2V).wv
+
+def vecinos(kv, palabra, k=TOP_K):
+    if palabra not in kv.key_to_index:
+        return []
+    return [w for w, _ in kv.most_similar(palabra, topn=k)]
+
+def jaccard(a, b):
+    a, b = set(a), set(b)
+    return len(a &amp; b) / len(a | b) if a | b else np.nan</pre>
+  <div class="claves">
+    <div class="clave" data-paso="0"><b>Un modelo por período</b><span>word2vec antes y después del corte, con la misma cantidad de texto</span></div>
+    <div class="clave" data-paso="0"><b>Los 10 vecinos</b><span>medimos qué parte de los vecinos más cercanos comparten los dos modelos</span></div>
+    <div class="clave" data-paso="0"><b>Contra el ruido</b><span>dos modelos del mismo período tampoco coinciden del todo: el cambio tiene que superar esa diferencia</span></div>
+  </div>
+  <aside class="notas">Entrenamos word2vec con los textos de antes y con los de después. Esta función mide cuántos vecinos comparten los dos modelos. Como word2vec da resultados distintos cada vez que se entrena, comparamos también dos modelos del mismo período. Si la diferencia entre antes y después no supera esa, no es un cambio real.</aside>
+</section>
+
+<!-- Vocabulario -->
 <section class="diapo" data-escena="vocab" data-pasos="1">
   <p class="kicker">Hipótesis C · Vocabulario</p>
   <h2>¿Con qué palabras aparece cada palabra?</h2>
@@ -374,8 +486,9 @@
     <p class="kicker">Conclusión</p>
     <h1>ChatGPT no es el punto de quiebre.</h1>
     <p class="bajada" style="margin-top:28px;font-size:26px" data-paso="1">Es una etapa de un cambio que empezó en 2021 y que la IA para programar profundizó en 2025.</p>
+    <p class="bajada" data-paso="1" style="margin-top:36px;font-size:20px">Código y datos en github.com/Tomas8x/TPI-PNL · ¡Gracias!</p>
   </div>
-  <p class="pie">Correlación, no causalidad: el corte coincide con despidos tech, suba de tasas y la devaluación argentina. ¡Gracias!</p>
+  <p class="pie">Correlación, no causalidad: el corte coincide con despidos tech, suba de tasas y la devaluación argentina.</p>
   <aside class="notas">Cierre: no podemos atribuir el cambio a ChatGPT. La conversación ya venía empeorando y el cambio más fuerte de temas llega con las herramientas para programar de 2025. Gracias, preguntas.</aside>
 </section>
 
@@ -390,9 +503,9 @@ const D = {"total_textos":1893480,"avisos_hn":93378,"volumen":{"trimestres":[["2
 if (new URLSearchParams(location.search).has("estatico")) document.documentElement.style.setProperty("--t", 0);
 const NS = "http://www.w3.org/2000/svg";
 const T = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--t")) || 0;
-const COL = { devsarg: "#3987e5", empleos_AR: "#d95926", taquerosprogramadores: "#199e70",
-  tinta: "#f0efec", tinta2: "#c3c2b7", tenue: "#898781", grilla: "#2c2c2a", eje: "#383835",
-  amarillo: "#c98500", magenta: "#d55181", violeta: "#9085e9", verde: "#2f9e2f" };
+const COL = { devsarg: "#2a78d6", empleos_AR: "#eb6834", taquerosprogramadores: "#1baf7a",
+  tinta: "#0b0b0b", tinta2: "#52514e", tenue: "#898781", grilla: "#e1e0d9", eje: "#c3c2b7",
+  amarillo: "#eda100", magenta: "#e87ba4", violeta: "#6250d6", verde: "#008300" };
 const ETQ = { devsarg: "r/devsarg", empleos_AR: "r/empleos_AR", taquerosprogramadores: "r/taquerosprogramadores" };
 const coma = (v, d = 1) => v.toFixed(d).replace(".", ",").replace("-", "−");
 const miles = v => Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -411,6 +524,23 @@ const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "o
   let html = document.getElementById("lienzo").innerHTML;
   for (const [k, v] of Object.entries(valores)) html = html.split(k).join(v);
   document.getElementById("lienzo").innerHTML = html;
+})();
+
+// Resaltado de Python para los bloques de código.
+(function resaltar() {
+  const re = /(#.*$)|(r?"(?:\\.|[^"\\])*")|\b(def|return|for|in|if|else|not|lambda|None|True|False)\b|\b(\d+)\b|(@[\w.]+)/gm;
+  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const clases = ["c-com", "c-str", "c-kw", "c-num", "c-dec"];
+  document.querySelectorAll("pre.codigo").forEach(pre => {
+    const src = pre.textContent;
+    let out = "", i = 0;
+    for (const m of src.matchAll(re)) {
+      const k = [1, 2, 3, 4, 5].find(j => m[j] !== undefined) - 1;
+      out += esc(src.slice(i, m.index)) + `<span class="${clases[k]}">${esc(m[0])}</span>`;
+      i = m.index + m[0].length;
+    }
+    pre.innerHTML = out + esc(src.slice(i));
+  });
 })();
 
 function el(tag, attrs = {}, padre) {
@@ -570,7 +700,7 @@ escenas.volumen = {
     this.barras = datos.map((q, i) => {
       const antes = q[0] <= "2022Q4" && q[0] !== "2022Q4" || q[0] === "2022Q4";
       const pre = q[0] < "2022Q4" || q[0] === "2022Q4";
-      const r = el("rect", { x: m.l + i * bw + 3, width: bw - 6, y: Y(0), height: 0, rx: 3, fill: pre ? COL.devsarg : "#3a4a5e" }, svg);
+      const r = el("rect", { x: m.l + i * bw + 3, width: bw - 6, y: Y(0), height: 0, rx: 3, fill: pre ? COL.devsarg : "#c5d8ef" }, svg);
       r.dataset.y = Y(q[1]); r.dataset.h = Y(0) - Y(q[1]);
       if (q[0].endsWith("Q1")) el("text", { x: m.l + i * bw + bw / 2, y: H - 8, "text-anchor": "middle", class: "eje-txt" }, svg).textContent = q[0].slice(0, 4);
       return r;
@@ -621,7 +751,7 @@ escenas.tiempo = {
       const x = X(fecha), clave = texto === "ChatGPT", y = niveles[nv], arriba = nv < 0;
       const g = el("g", {}, svg);
       el("line", { x1: x, x2: x, y1: yl, y2: arriba ? y + 8 : y - 20, stroke: COL.eje, "stroke-width": 1.5 }, g);
-      el("circle", { cx: x, cy: yl, r: clave ? 11 : 7, fill: color[tipo], stroke: "#1a1a19", "stroke-width": 3 }, g);
+      el("circle", { cx: x, cy: yl, r: clave ? 11 : 7, fill: color[tipo], stroke: "#fcfcfb", "stroke-width": 3 }, g);
       const t = el("text", { x: x + (ancla === "end" ? 6 : ancla === "start" ? -6 : 0), y, "text-anchor": ancla, class: "rotulo", fill: clave ? COL.tinta : COL.tinta2, "font-size": clave ? 24 : 16 }, g);
       t.textContent = texto;
       g.style.opacity = 0; g.style.transform = "translateY(8px)";
@@ -713,7 +843,7 @@ escenas.herramientas = {
     const g = Grafico(d.querySelector("svg"), { desde: "2023-01", hasta: "2026-10", y0: 0, y1: 100, ticksY: [0, 25, 50, 75, 100],
       formatoY: v => `${v}%`, formatoValor: v => `${Math.round(v)}%`, alto: 440, corte: false, margen: { r: 120 }, formatoMes: m => `trimestre de ${textoMes(m)}` });
     const h = D.ia.herramientas;
-    ["Copilot", "Cursor", "Gemini"].forEach(k => g.mostrar(g.linea(k, h[k], { color: "#6a6964", ancho: 2, nombre: k }), true, 1.6));
+    ["Copilot", "Cursor", "Gemini"].forEach(k => g.mostrar(g.linea(k, h[k], { color: "#b3b2ab", ancho: 2, nombre: k }), true, 1.6));
     const fin = h.Copilot.at(-1)[0];
     g.nota(g.X(fin) + 10, g.Y(5) + 6, "Copilot, Cursor y Gemini", { class: "eje-txt", fill: COL.tinta2 });
     const chat = g.linea("ChatGPT", h.ChatGPT, { color: COL.violeta, ancho: 4, nombre: "ChatGPT", etiqueta: "ChatGPT" });
