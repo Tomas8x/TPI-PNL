@@ -141,18 +141,6 @@
   .hip.sin-estado b { font-size: 26px; margin-bottom: 4px; }
   .hip.sin-estado span { font-size: 19px; }
 
-  /* Código */
-  pre.codigo { margin: 26px 0 0; background: #f3f2ee; border: 1px solid var(--grilla); border-radius: 14px; padding: 20px 26px;
-    font: 16px/1.55 "Cascadia Mono", Consolas, "Courier New", monospace; color: var(--tinta); white-space: pre; overflow: hidden; }
-  .c-kw { color: #6250d6; font-weight: 600; }
-  .c-str { color: #007a33; }
-  .c-com { color: #898781; font-style: italic; }
-  .c-num { color: #c25400; }
-  .c-dec { color: #2a78d6; }
-  .claves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 28px; }
-  .clave { border-left: 4px solid var(--devsarg); padding: 2px 0 2px 18px; }
-  .clave b { display: block; font-size: 21px; margin-bottom: 4px; }
-  .clave span { font-size: 17px; color: var(--tinta-2); line-height: 1.4; }
 
   .cierre h1 { font-size: 72px; max-width: 1080px; }
 
@@ -262,30 +250,6 @@
   <aside class="notas">Cuatro técnicas del programa. Para el tono usamos un modelo de transformers entrenado con texto informal en español. Para los temas, diccionarios validados a mano, TF-IDF y BERTopic. Para el vocabulario, word2vec. Para los actores, NER más un diccionario.</aside>
 </section>
 
-<!-- Código: sentimiento -->
-<section class="diapo">
-  <p class="kicker">Cómo lo hicimos · scripts/sentimiento.py</p>
-  <h2>Clasificamos los 1,9 millones de textos, sin muestrear</h2>
-  <pre class="codigo">@torch.inference_mode()
-def clasificar(textos, tok, modelo):
-    orden = sorted(range(len(textos)), key=lambda i: len(textos[i]))
-    probs = [None] * len(textos)
-    for b in range(0, len(orden), LOTE):
-        idx = orden[b:b + LOTE]
-        enc = tok([textos[i] for i in idx], truncation=True, max_length=128,
-                  padding=True, return_tensors="pt").to("cuda")
-        p = torch.softmax(modelo(**enc).logits.float(), dim=-1).cpu().numpy()
-        for i, fila in zip(idx, p):
-            probs[i] = fila
-    return probs</pre>
-  <div class="claves">
-    <div class="clave" data-paso="0"><b>Dos modelos</b><span>RoBERTuito de pysentimiento, entrenado con tuits en español: sentimiento y emociones</span></div>
-    <div class="clave" data-paso="0"><b>En la placa de video</b><span>lotes de 256 textos ordenados por largo, para no procesar relleno</span></div>
-    <div class="clave" data-paso="0"><b>Validado a mano</b><span>60 textos revisados: el modelo coincide en 49 (82%)</span></div>
-  </div>
-  <aside class="notas">Esta es la función que clasifica. Pasamos todos los textos por el modelo en la placa de video, de a 256, ordenados por largo. Revisamos 60 textos a mano y el modelo coincidió en el 82%.</aside>
-</section>
-
 <!-- Línea de tiempo -->
 <section class="diapo" data-escena="tiempo">
   <p class="kicker">Contexto</p>
@@ -363,25 +327,6 @@ def clasificar(textos, tok, modelo):
   <aside class="notas">Qué herramienta se nombra. ChatGPT tenía el 92% de las menciones en 2023. En 2026 Claude lo pasó. Es otra señal de que la conversación cambió con las herramientas para programar, no con el chat.</aside>
 </section>
 
-<!-- Código: diccionario de actores -->
-<section class="diapo">
-  <p class="kicker">Cómo lo hicimos · scripts/analisis_entidades.py</p>
-  <h2>Un diccionario con las variantes de cada herramienta</h2>
-  <pre class="codigo">ACTORES = [
-    # Herramientas de IA
-    ("ChatGPT/OpenAI", "ia_herramienta", r"chat\s?-?gpt|\bgpt\b|\bgpt-?[345]\w*|openai|open ai"),
-    ("Copilot", "ia_herramienta", r"copilot"),
-    ("Claude", "ia_herramienta", r"\bclaude\b|anthropic"),
-    ("Cursor", "ia_herramienta", r"\bcursor\b"),
-    ("Gemini/Bard", "ia_herramienta", r"\bgemini\b|\bbard\b"),</pre>
-  <div class="claves">
-    <div class="clave" data-paso="0"><b>NER primero</b><span>spaCy encuentra empresas y lugares, pero en este corpus confunde muchas herramientas</span></div>
-    <div class="clave" data-paso="0"><b>Expresiones regulares</b><span>cada actor tiene un patrón con sus variantes: "chat gpt", "gpt-4", "openai"</span></div>
-    <div class="clave" data-paso="0"><b>Por trimestre</b><span>contamos menciones en los tres subreddits y la parte de cada herramienta</span></div>
-  </div>
-  <aside class="notas">Para contar menciones armamos un diccionario con las formas en que la gente nombra cada herramienta. Con eso vemos que en 2023 casi todo era ChatGPT y que en 2026 Claude ya se nombra más.</aside>
-</section>
-
 <!-- Temas -->
 <section class="diapo" data-escena="temas" data-pasos="1">
   <p class="kicker">Hipótesis A · Temas</p>
@@ -392,29 +337,6 @@ def clasificar(textos, tok, modelo):
   <div class="grafico"><svg></svg></div>
   <p class="pie">% de posts de r/devsarg en cada tema, antes y después del corte (BERTopic sobre 83 mil posts).</p>
   <aside class="notas">Temas que encontró BERTopic, antes del corte. [Avanzar] Después: cae aprender a programar, que era el tema principal, y caen las tecnologías puntuales. Suben sueldos, entrevistas e IA. La hipótesis decía que se iba a hablar menos de sueldos: pasó lo contrario.</aside>
-</section>
-
-<!-- Código: vocabulario -->
-<section class="diapo">
-  <p class="kicker">Cómo lo hicimos · scripts/analisis_vocabulario.py</p>
-  <h2>¿Cambió el significado o es ruido?</h2>
-  <pre class="codigo">def entrenar(textos, semilla):
-    return Word2Vec(sentences=textos, seed=semilla, **PARAMS_W2V).wv
-
-def vecinos(kv, palabra, k=TOP_K):
-    if palabra not in kv.key_to_index:
-        return []
-    return [w for w, _ in kv.most_similar(palabra, topn=k)]
-
-def jaccard(a, b):
-    a, b = set(a), set(b)
-    return len(a &amp; b) / len(a | b) if a | b else np.nan</pre>
-  <div class="claves">
-    <div class="clave" data-paso="0"><b>Un modelo por período</b><span>word2vec antes y después del corte, con la misma cantidad de texto</span></div>
-    <div class="clave" data-paso="0"><b>Los 10 vecinos</b><span>medimos qué parte de los vecinos más cercanos comparten los dos modelos</span></div>
-    <div class="clave" data-paso="0"><b>Contra el ruido</b><span>dos modelos del mismo período tampoco coinciden del todo: el cambio tiene que superar esa diferencia</span></div>
-  </div>
-  <aside class="notas">Entrenamos word2vec con los textos de antes y con los de después. Esta función mide cuántos vecinos comparten los dos modelos. Como word2vec da resultados distintos cada vez que se entrena, comparamos también dos modelos del mismo período. Si la diferencia entre antes y después no supera esa, no es un cambio real.</aside>
 </section>
 
 <!-- Vocabulario -->
@@ -524,23 +446,6 @@ const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "o
   let html = document.getElementById("lienzo").innerHTML;
   for (const [k, v] of Object.entries(valores)) html = html.split(k).join(v);
   document.getElementById("lienzo").innerHTML = html;
-})();
-
-// Resaltado de Python para los bloques de código.
-(function resaltar() {
-  const re = /(#.*$)|(r?"(?:\\.|[^"\\])*")|\b(def|return|for|in|if|else|not|lambda|None|True|False)\b|\b(\d+)\b|(@[\w.]+)/gm;
-  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const clases = ["c-com", "c-str", "c-kw", "c-num", "c-dec"];
-  document.querySelectorAll("pre.codigo").forEach(pre => {
-    const src = pre.textContent;
-    let out = "", i = 0;
-    for (const m of src.matchAll(re)) {
-      const k = [1, 2, 3, 4, 5].find(j => m[j] !== undefined) - 1;
-      out += esc(src.slice(i, m.index)) + `<span class="${clases[k]}">${esc(m[0])}</span>`;
-      i = m.index + m[0].length;
-    }
-    pre.innerHTML = out + esc(src.slice(i));
-  });
 })();
 
 function el(tag, attrs = {}, padre) {
